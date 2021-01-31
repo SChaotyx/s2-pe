@@ -16,3 +16,5 @@ build_source/**/bin/
 *_cmp.bin
 *.gen.asm
 .vs/
+.Emu/
+.vscode/

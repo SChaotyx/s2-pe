@@ -84,6 +84,9 @@ IF EXIST s2built.bin "win32/fixpointer" s2.h s2built.bin   off_3A294 MapRUnc_Son
 REM REM // fix the rom header (checksum)
 IF EXIST s2built.bin "win32/fixheader" s2built.bin
 
+cd .Emu
+Emu.bat
+
 REM // if there were errors/warnings, a log file is produced
 IF EXIST s2.log goto LABLERROR4
 
@@ -125,7 +128,7 @@ echo *      There were build warnings. See s2.log for more details.       *
 echo *                                                                    *
 echo **********************************************************************
 echo.
-pause
+s2.log
 
 exit /b
 
@@ -138,6 +141,6 @@ echo *       There were build errors. See s2.log for more details.        *
 echo *                                                                    *
 echo **********************************************************************
 echo.
-pause
+s2.log
 
 
