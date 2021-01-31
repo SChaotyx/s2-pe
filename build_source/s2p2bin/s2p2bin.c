@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "clownlzss/kosinski.h"
+#include "clownlzss/saxman.h"
+#include "lz_comp2/LZSS.h"
 
 const char* codeFileName = NULL;
 const char* romFileName = NULL;
@@ -141,12 +142,22 @@ bool buildRom(FILE* from, FILE* to)
 			start = lastStart + lastLength;
 			int srcStart = ftell(from);
 
-			unsigned char *uncompressed_buffer = malloc(length);
-			fread(uncompressed_buffer, length, 1, from);
-			unsigned char *compressed_buffer = ClownLZSS_KosinskiCompress(uncompressed_buffer, length, &compressedLength);
-			free(uncompressed_buffer);
-			fwrite(compressed_buffer, compressedLength, 1, to);
-			free(compressed_buffer);
+			if (accurate_compression)
+			{
+				const size_t position_before = ftell(to);
+				Encode(from, to, length);
+				putc(0x4E, to);	// For some reason, the original ROMs have this stray byte - not even the authentic original compressor replicates it
+				compressedLength = ftell(to) - position_before;
+			}
+			else
+			{
+				unsigned char *uncompressed_buffer = malloc(length);
+				fread(uncompressed_buffer, length, 1, from);
+				unsigned char *compressed_buffer = SaxmanCompress(uncompressed_buffer, length, &compressedLength, false);
+				free(uncompressed_buffer);
+				fwrite(compressed_buffer, compressedLength, 1, to);
+				free(compressed_buffer);
+			}
 
 			fseek(from, srcStart + length, SEEK_SET);
 			lastSegmentCompressed = true;
