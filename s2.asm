@@ -82856,11 +82856,11 @@ PLC_DYNANM: zoneOrderedOffsetTable 2,2		; Zone ID
 	zoneOffsetTableEntry.w Dynamic_Null	; $10
 	zoneOffsetTableEntry.w Animated_Null
 
-	zoneOffsetTableEntry.w Dynamic_Null	; $11
-	zoneOffsetTableEntry.w Animated_Null
+	zoneOffsetTableEntry.w Dynamic_Normal	; $11
+	zoneOffsetTableEntry.w Animated_GHZ
 
-	zoneOffsetTableEntry.w Dynamic_Null	; $12
-	zoneOffsetTableEntry.w Animated_Null
+	zoneOffsetTableEntry.w Dynamic_Normal	; $12
+	zoneOffsetTableEntry.w Animated_GHZ
 
     zoneTableEnd
 ; ===========================================================================
@@ -83442,6 +83442,27 @@ Animated_ARZ:	zoneanimstart
 	zoneanimdecl 5, ArtUnc_Waterfall3, ArtTile_ArtUnc_Waterfall3, 2, 4
 	dc.b   0
 	dc.b   4
+	even
+
+	zoneanimend
+
+Animated_GHZ:	zoneanimstart
+	; Big flower
+	zoneanimdecl $13, ArtUnc_GhzFlower1, ArtTile_ArtUnc_GHZFlowers1, 2, $10
+	dc.b   0		; Start of the script proper
+	dc.b   $10
+	even
+	; Small flower
+	zoneanimdecl -1, ArtUnc_GhzFlower2, ArtTile_ArtUnc_GHZFlowers2, 4, $C
+	dc.b   0,$7F		; Start of the script proper
+	dc.b   $C,$7
+	dc.b   $18,$7F
+	dc.b   $C,$7
+	even
+	; Water Fall
+	zoneanimdecl 5, ArtUnc_GhzWater, ArtTile_ArtUnc_GHZWaterFall, 2, $8
+	dc.b   0		; Start of the script proper
+	dc.b   8
 	even
 
 	zoneanimend
@@ -87250,6 +87271,14 @@ ArtUnc_Flowers1:	BINCLUDE	"art/uncompressed/EHZ and HTZ flowers - 1.bin"
 ArtUnc_Flowers2:	BINCLUDE	"art/uncompressed/EHZ and HTZ flowers - 2.bin"
 ArtUnc_Flowers3:	BINCLUDE	"art/uncompressed/EHZ and HTZ flowers - 3.bin"
 ArtUnc_Flowers4:	BINCLUDE	"art/uncompressed/EHZ and HTZ flowers - 4.bin"
+;---------------------------------------------------------------------------------------
+;Green Hill Zone animate Zone
+; ---------------------------------------------------------------------------
+; Animated uncompressed graphics
+; ---------------------------------------------------------------------------
+ArtUnc_GhzWater:	BINCLUDE	"art/uncompressed/GHZ Waterfall.bin"
+ArtUnc_GhzFlower1:	BINCLUDE	"art/uncompressed/GHZ Flower Large.bin"
+ArtUnc_GhzFlower2:	BINCLUDE	"art/uncompressed/GHZ Flower Small.bin"
 ;---------------------------------------------------------------------------------------
 ; Uncompressed art
 ; Pulsing thing against checkered backing from EHZ ; ArtUnc_49914:

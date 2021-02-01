@@ -1987,8 +1987,12 @@ ArtTile_ArtNem_Balkrie                = $0565
 
 ; ---------------------------------------------------------------------------
 ; Level-specific objects and badniks.
+
 ; GHZ
-ArtTile_ArtNem_Motobug				  = $03EE
+ArtTile_ArtUnc_GHZFlowers1            = $0342 ; Big Flowers
+ArtTile_ArtUnc_GHZFlowers2            = $0352 ; Small Flowers
+ArtTile_ArtUnc_GHZWaterFall           = $035E ; Small Flowers
+ArtTile_ArtNem_Motobug				  = $0366
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C
