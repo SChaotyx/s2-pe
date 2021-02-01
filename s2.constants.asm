@@ -487,6 +487,8 @@ PLCID_Tornado =		id(PLCptr_Tornado) ; 3F
 PLCID_Capsule =		id(PLCptr_Capsule) ; 40
 PLCID_Explosion =	id(PLCptr_Explosion) ; 41
 PLCID_ResultsTails =	id(PLCptr_ResultsTails) ; 42
+PLCID_Ghz1 =		id(PLCptr_Ghz1) ; 43
+PLCID_Ghz2 =		id(PLCptr_Ghz2) ; 44
 
 ; Object IDs
 offset :=	Obj_Index
@@ -714,6 +716,7 @@ ObjID_ContinueText =		id(ObjPtr_ContinueText)		; DA
 ObjID_ContinueIcons =		id(ObjPtr_ContinueIcons)	; DA
 ObjID_ContinueChars =		id(ObjPtr_ContinueChars)	; DB
 ObjID_RingPrize =		id(ObjPtr_RingPrize)		; DC
+ObjID_Motobug =			id(ObjPtr_Motobug)			; DD
 
 	include "musicids.gen.asm"
 
@@ -1984,6 +1987,8 @@ ArtTile_ArtNem_Balkrie                = $0565
 
 ; ---------------------------------------------------------------------------
 ; Level-specific objects and badniks.
+; GHZ
+ArtTile_ArtNem_Motobug				  = $03EE
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C
@@ -2288,7 +2293,7 @@ ArtTile_ArtNem_GHZ_Purple_Rock        = $06C0
 ; ---------------------------------------------------------------------------
 ; Sonic 1 equivalent constants
 ; ---------------------------------------------------------------------------
-
+; s1: equ s2
 v_hscrolltablebuffer:   equ Horiz_Scroll_Buf
 v_bgscroll_buffer:      equ TempArray_LayerDef
 v_screenposy:           equ Camera_Y_pos
@@ -2327,3 +2332,41 @@ v_dle_routine:			equ	Dynamic_Resize_Routine
 v_pcyc_time:			equ PalCycle_Timer
 v_pcyc_num:				equ PalCycle_Frame
 v_pal_dry:				equ Normal_palette
+v_objstate:				equ Obj_respawn_data
+
+
+obMap:					equ mappings
+obGfx:					equ art_tile
+obRender:				equ render_flags
+obPriority:				equ priority
+obActWid:				equ width_pixels
+obAnim:					equ anim
+obHeight:				equ y_radius
+obWidth:				equ x_radius
+obY:					equ y_pos
+obX:					equ x_pos
+obVelY:					equ y_vel
+obVelX:					equ x_vel
+obRoutine:				equ routine
+ob2ndRout:				equ routine_secondary
+obStatus:				equ status
+obColType:				equ collision_flags
+obRespawnNo:			equ respawn_index
+; ---------------------------------------------------------------------------
+; Sonic 1 equivalent subroutines
+; ---------------------------------------------------------------------------
+; S1 => S2
+; ObjectFall 			=> ObjectMoveAndFall
+; ObjFloorDist 			=> ObjCheckFloorDist
+; SpeedToPos			=> ObjectMove
+
+; ---------------------------------------------------------------------------
+; Sonic 1 animation flags
+; ---------------------------------------------------------------------------
+; Animation flags
+afEnd:		equ $FF	; return to beginning of animation
+afBack:		equ $FE	; go back (specified number) bytes
+afChange:	equ $FD	; run specified animation
+afRoutine:	equ $FC	; increment routine counter
+afReset:	equ $FB	; reset animation and 2nd object routine counter
+af2ndRoutine:	equ $FA	; increment 2nd routine counter

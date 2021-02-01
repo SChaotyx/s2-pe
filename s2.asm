@@ -27911,6 +27911,7 @@ ObjPtr_ContinueText:
 ObjPtr_ContinueIcons:	dc.l ObjDA	; Continue text
 ObjPtr_ContinueChars:	dc.l ObjDB	; Sonic lying down or Tails nagging (continue screen)
 ObjPtr_RingPrize:	dc.l ObjDC	; Ring prize from Casino Night Zone
+ObjPtr_Motobug:		dc.l ObjDD	; Motobug - Green Hill Zone
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
 ; Object 4C, 4D, 4E, 4F, 62, D0, and D1
@@ -27930,6 +27931,7 @@ ObjNull: ;;
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_16380: ObjectFall:
+ObjectFall:
 ObjectMoveAndFall:
 	move.l	x_pos(a0),d2	; load x position
 	move.l	y_pos(a0),d3	; load y position
@@ -27957,6 +27959,7 @@ ObjectMoveAndFall:
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; sub_163AC: SpeedToPos:
+SpeedToPos:
 ObjectMove:
 	move.l	x_pos(a0),d2	; load x position
 	move.l	y_pos(a0),d3	; load y position
@@ -31076,6 +31079,7 @@ return_17FD8:
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; loc_17FDA: ; allocObject:
+FindFreeObj:
 SingleObjLoad:
 	lea	(Dynamic_Object_RAM).w,a1 ; a1=object
 	move.w	#(Dynamic_Object_RAM_End-Dynamic_Object_RAM)/object_size-1,d0 ; search to end of table
@@ -41111,6 +41115,7 @@ return_1EDF8:
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; loc_1EDFA: ObjHitFloor:
+ObjFloorDist:
 ObjCheckFloorDist:
 	move.w	x_pos(a0),d3
 	move.w	y_pos(a0),d2
@@ -81848,6 +81853,14 @@ byte_3F42F:	dc.b   3,  0,  1,  2,  3,$FE,  1
 Obj3E_MapUnc_3F436:	BINCLUDE "mappings/sprite/obj3E.bin"
 ; ===========================================================================
 
+; ----------------------------------------------------------------------------
+; Objects Include
+; ----------------------------------------------------------------------------
+
+		include "objects/Object DD - Moto Bug enemy (GHZ).asm"
+
+; ===========================================================================
+
     if gameRevision<2
 	nop
     endif
@@ -85909,8 +85922,8 @@ LevelArtPointers:
 	levartptrs PLCID_Dez1,     PLCID_Dez2,      PalID_DEZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ;  $E ; DEZ  ; DEATH EGG ZONE
 	levartptrs PLCID_Arz1,     PLCID_Arz2,      PalID_ARZ,  ArtKos_ARZ, BM16_ARZ, BM128_ARZ ;  $F ; ARZ  ; AQUATIC RUIN ZONE
 	levartptrs PLCID_Scz1,     PLCID_Scz2,      PalID_SCZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $10 ; SCZ  ; SKY CHASE ZONE
-	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $11 ; GHZ  ; GREEN HILL ZONE ACTS 1 & 2
-	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $11 ; GHZ3 ; GREEN HILL ZONE ACT 3
+	levartptrs PLCID_Ghz1,     PLCID_Ghz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $11 ; GHZ  ; GREEN HILL ZONE ACTS 1 & 2
+	levartptrs PLCID_Ghz1,     PLCID_Ghz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $11 ; GHZ3 ; GREEN HILL ZONE ACT 3
 
     if (cur_zone_id<>no_of_zones)&&(MOMPASS=1)
 	message "Warning: Table LevelArtPointers has \{cur_zone_id/1.0} entries, but it should have \{no_of_zones/1.0} entries"
@@ -86022,6 +86035,8 @@ PLCptr_Tornado:		offsetTableEntry.w PlrList_Tornado		; 63
 PLCptr_Capsule:		offsetTableEntry.w PlrList_Capsule		; 64
 PLCptr_Explosion:	offsetTableEntry.w PlrList_Explosion		; 65
 PLCptr_ResultsTails:	offsetTableEntry.w PlrList_ResultsTails		; 66
+PLCptr_Ghz1:		offsetTableEntry.w PlrList_Ghz1			; 67
+PLCptr_Ghz2:		offsetTableEntry.w PlrList_Ghz2			; 68
 
 ; macro for a pattern load request list header
 ; must be on the same line as a label that has a corresponding _End label later
@@ -86402,6 +86417,27 @@ PlrList_Scz2: plrlistheader
 	plreq ArtTile_ArtNem_Turtloid, ArtNem_Turtloid
 	plreq ArtTile_ArtNem_Nebula, ArtNem_Nebula
 PlrList_Scz2_End
+;---------------------------------------------------------------------------------------
+; PATTERN LOAD REQUEST LIST
+; Green Hill Zone primary
+;---------------------------------------------------------------------------------------
+PlrList_Ghz1: plrlistheader
+	plreq ArtTile_ArtNem_Waterfall, ArtNem_Waterfall
+	plreq ArtTile_ArtNem_EHZ_Bridge, ArtNem_EHZ_Bridge
+	plreq ArtTile_ArtNem_Buzzer_Fireball, ArtNem_HtzFireball1
+	plreq ArtTile_ArtNem_Buzzer, ArtNem_Buzzer
+	plreq ArtTile_ArtNem_Motobug, ArtNem_Motobug
+PlrList_Ghz1_End
+;---------------------------------------------------------------------------------------
+; PATTERN LOAD REQUEST LIST
+; Green Hill Zone secondary
+;---------------------------------------------------------------------------------------
+PlrList_Ghz2: plrlistheader
+	plreq ArtTile_ArtNem_Spikes, ArtNem_Spikes
+	plreq ArtTile_ArtNem_DignlSprng, ArtNem_DignlSprng
+	plreq ArtTile_ArtNem_VrtclSprng, ArtNem_VrtclSprng
+	plreq ArtTile_ArtNem_HrzntlSprng, ArtNem_HrzntlSprng
+PlrList_Ghz2_End
 ;---------------------------------------------------------------------------------------
 ; Pattern load queue
 ; Sonic end of level results screen
@@ -88124,6 +88160,11 @@ ArtNem_Crawl:	BINCLUDE	"art/nemesis/Bouncer badnik from CNZ.bin"
 ; Rocket thruster for Tornado	; ArtNem_90520:
 	even
 ArtNem_TornadoThruster:	BINCLUDE	"art/nemesis/Rocket thruster for Tornado.bin"
+;--------------------------------------------------------------------------------------
+; Nemesis compressed art
+; Moto Bug
+	even
+ArtNem_Motobug:	BINCLUDE	"art/nemesis/Motobug Enemy.bin"
 ;--------------------------------------------------------------------------------------
 ; Enigma compressed sprite mappings
 ; Frame 1 of end of game sequence	; MapEng_906E0:
