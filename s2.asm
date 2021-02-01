@@ -4186,8 +4186,8 @@ MusicList: zoneOrderedTable 1,2
 	zoneTableEntry.b MusID_DEZ, MusID_DEZ	; 14 ; DEZ
 	zoneTableEntry.b MusID_ARZ, MusID_ARZ	; 15 ; ARZ
 	zoneTableEntry.b MusID_SCZ, MusID_EHZ	; 16 ; SCZ
-	zoneTableEntry.b MusID_EHZ, MusID_EHZ	; 17 ; GHZ1,2
-	zoneTableEntry.b MusID_EHZ, MusID_EHZ	; 18 ; GHZ3
+	zoneTableEntry.b MusID_GHZ, MusID_GHZ	; 17 ; GHZ1,2
+	zoneTableEntry.b MusID_GHZ, MusID_GHZ	; 18 ; GHZ3
 
     zoneTableEnd
 	even
