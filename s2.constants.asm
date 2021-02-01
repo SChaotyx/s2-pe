@@ -281,6 +281,8 @@ chemical_plant_zone zoneID	$0D
 death_egg_zone zoneID		$0E
 aquatic_ruin_zone zoneID	$0F
 sky_chase_zone zoneID		$10
+green_hill_zone zoneID		$11
+green_hill_zone_2 zoneID		$12
 
 ; NOTE: If you want to shift IDs around, set useFullWaterTables to 1 in the assembly options
 
@@ -313,6 +315,10 @@ wood_zone_act_1 =		(wood_zone<<8)|$00
 wood_zone_act_2 =		(wood_zone<<8)|$01
 hidden_palace_zone_act_1 =	(hidden_palace_zone<<8)|$00
 hidden_palace_zone_act_2 =	(hidden_palace_zone<<8)|$01
+; Sonic 1 zones
+green_hill_zone_act_1 = (green_hill_zone<<8)|$00
+green_hill_zone_act_2 = (green_hill_zone<<8)|$01
+green_hill_zone_act_3 = (green_hill_zone_2<<8)|$00
 
 ; ---------------------------------------------------------------------------
 ; some variables and functions to help define those constants (redefined before a new set of IDs)
@@ -407,6 +413,7 @@ PalID_SS3_2p =	id(PalPtr_SS3_2p) ; 24
 PalID_OOZ_B =	id(PalPtr_OOZ_B) ; 25
 PalID_Menu =	id(PalPtr_Menu) ; 26
 PalID_Result =	id(PalPtr_Result) ; 27
+PalID_GHZ =		id(PalPtr_GHZ) ; 28
 
 ; PLC IDs
 offset :=	ArtLoadCues
@@ -2278,3 +2285,45 @@ ArtTile_ArtNem_EndPoints              = $04B6
 ArtTile_ArtNem_BreakWall              = $0590
 ArtTile_ArtNem_GHZ_Purple_Rock        = $06C0
 
+; ---------------------------------------------------------------------------
+; Sonic 1 equivalent constants
+; ---------------------------------------------------------------------------
+
+v_hscrolltablebuffer:   equ Horiz_Scroll_Buf
+v_bgscroll_buffer:      equ TempArray_LayerDef
+v_screenposy:           equ Camera_Y_pos
+v_screenposx:           equ Camera_X_pos
+v_bgscreenposy:         equ Camera_BG_Y_pos
+v_bgscreenposx:         equ Camera_BG_X_pos
+v_bg2screenposy:        equ Camera_BG2_Y_pos
+v_bg2screenposx:        equ Camera_BG2_X_pos
+v_bg3screenposy:        equ Camera_BG3_Y_pos
+v_bg3screenposx:        equ Camera_BG3_X_pos
+v_bgscrposy_dup:        equ Vscroll_Factor_BG
+v_bg1_scroll_flags:     equ Scroll_flags_BG
+v_bg2_scroll_flags:     equ Scroll_flags_BG2
+v_bg3_scroll_flags:     equ Scroll_flags_BG3
+v_scrshiftx:            equ Camera_X_pos_diff
+v_scrshifty:            equ Camera_Y_pos_diff
+v_bg1_yblock:           equ Verti_block_crossed_flag_BG
+v_bg1_xblock:           equ Horiz_block_crossed_flag_BG
+v_bg2_xblock:           equ Horiz_block_crossed_flag_BG2
+v_bg3_xblock:           equ Horiz_block_crossed_flag_BG3
+
+v_act:					equ Current_Act
+
+v_limitbtm1:			equ Camera_Max_Y_pos
+v_limitbtm2:			equ Camera_Max_Y_pos_now
+v_limittop1:			equ Camera_Min_Y_pos
+v_limittop2:			equ Camera_Min_Y_pos
+
+v_limitleft1:			equ Camera_Min_X_pos
+v_limitleft2:			equ Camera_Min_X_pos
+v_limitright1:			equ Camera_Max_X_pos
+v_limitright2:			equ Camera_Max_X_pos
+
+v_dle_routine:			equ	Dynamic_Resize_Routine
+
+v_pcyc_time:			equ PalCycle_Timer
+v_pcyc_num:				equ PalCycle_Frame
+v_pal_dry:				equ Normal_palette

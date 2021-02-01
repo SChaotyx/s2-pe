@@ -2324,12 +2324,34 @@ PalCycle: zoneOrderedOffsetTable 2,1
 	zoneOffsetTableEntry.w PalCycle_CPZ	; 14
 	zoneOffsetTableEntry.w PalCycle_ARZ	; 15
 	zoneOffsetTableEntry.w PalCycle_WFZ	; 16
+	zoneOffsetTableEntry.w PalCycle_GHZ	; 17	;$11
+	zoneOffsetTableEntry.w PalCycle_GHZ	; 18	;$12
     zoneTableEnd
 
 ; ===========================================================================
 ; return_1A16:
 PalCycle_Null:
 	rts
+; ===========================================================================
+
+PalCycle_GHZ:
+	lea	(CyclingPal_GHZ).l,a0
+	subq.w	#1,(v_pcyc_time).w ; decrement timer
+	bpl.s	PCycGHZ_Skip	; if time remains, branch
+
+	move.w	#5,(v_pcyc_time).w ; reset timer to 5 frames
+	move.w	(v_pcyc_num).w,d0 ; get cycle number
+	addq.w	#1,(v_pcyc_num).w ; increment cycle number
+	andi.w	#3,d0		; if cycle > 3, reset to 0
+	lsl.w	#3,d0
+	lea	(v_pal_dry+$50).w,a1
+	move.l	(a0,d0.w),(a1)+
+	move.l	4(a0,d0.w),(a1)	; copy palette data to RAM
+
+PCycGHZ_Skip:
+	rts	
+; End of function PCycle_GHZ
+
 ; ===========================================================================
 
 PalCycle_EHZ:
@@ -2695,6 +2717,8 @@ CyclingPal_WFZ1:
 ; word_2126:
 CyclingPal_WFZ2:
 	BINCLUDE "art/palettes/WFZ Cycle 2.bin"; Wing Fortress Flashing Light Cycle 2
+CyclingPal_GHZ:
+	BINCLUDE "art/palettes/GHZ Cycle 1.bin"; Green Hill Zone Water Cycle
 ; ----------------------------------------------------------------------------
 
 
@@ -3437,6 +3461,7 @@ PalPtr_SS3_2p:	palptr Pal_SS3_2p,3
 PalPtr_OOZ_B:	palptr Pal_OOZ_B, 1
 PalPtr_Menu:	palptr Pal_Menu,  0
 PalPtr_Result:	palptr Pal_Result,0
+PalPtr_GHZ:		palptr Pal_GHZ,1
 
 ; ----------------------------------------------------------------------------
 ; This macro defines Pal_ABC and Pal_ABC_End, so palptr can compute the size of
@@ -3487,6 +3512,7 @@ Pal_SS1_2p:palette Special Stage 1 2p.bin ; Special Stage 1 2p palette
 Pal_SS2_2p:palette Special Stage 2 2p.bin ; Special Stage 2 2p palette
 Pal_SS3_2p:palette Special Stage 3 2p.bin ; Special Stage 3 2p palette
 Pal_Result:palette Special Stage Results Screen.bin ; Special Stage Results Screen palette
+Pal_GHZ:   palette GHZ.bin ; Green Hill Zone palette
 ; ===========================================================================
 
     if gameRevision<2
@@ -3980,11 +4006,11 @@ TitleScreen_Loop:
 	moveq	#0,d0
 	move.w	d0,(Two_player_mode_copy).w
 	move.w	d0,(Two_player_mode).w
-    if emerald_hill_zone_act_1=0
-	move.w	d0,(Current_ZoneAndAct).w ; emerald_hill_zone_act_1
-    else
-	move.w #emerald_hill_zone_act_1,(Current_ZoneAndAct).w
-    endif
+    ;if emerald_hill_zone_act_1=0
+	;move.w	d0,(Current_ZoneAndAct).w ; emerald_hill_zone_act_1
+    ;else
+	move.w #green_hill_zone_act_1,(Current_ZoneAndAct).w
+    ;endif
 	tst.b	(Level_select_flag).w	; has level select cheat been entered?
 	beq.s	+			; if not, branch
 	btst	#button_A,(Ctrl_1_Held).w ; is A held down?
@@ -4160,6 +4186,9 @@ MusicList: zoneOrderedTable 1,2
 	zoneTableEntry.b MusID_DEZ, MusID_DEZ	; 14 ; DEZ
 	zoneTableEntry.b MusID_ARZ, MusID_ARZ	; 15 ; ARZ
 	zoneTableEntry.b MusID_SCZ, MusID_EHZ	; 16 ; SCZ
+	zoneTableEntry.b MusID_EHZ, MusID_EHZ	; 17 ; GHZ1,2
+	zoneTableEntry.b MusID_EHZ, MusID_EHZ	; 18 ; GHZ3
+
     zoneTableEnd
 	even
 ;----------------------------------------------------------------------------
@@ -4184,6 +4213,8 @@ MusicList2: zoneOrderedTable 1,2
 	zoneTableEntry.b MusID_DEZ, MusID_EHZ	; 14
 	zoneTableEntry.b MusID_ARZ, MusID_EHZ	; 15
 	zoneTableEntry.b MusID_SCZ, MusID_EHZ	; 16
+	zoneTableEntry.b MusID_EHZ, MusID_EHZ	; 17
+	zoneTableEntry.b MusID_EHZ, MusID_EHZ	; 18
     zoneTableEnd
 	even
 ; ===========================================================================
@@ -5208,6 +5239,8 @@ DemoScriptPointers: zoneOrderedTable 4,1
 	zoneTableEntry.l Demo_EHZ	; $0E
 	zoneTableEntry.l Demo_ARZ	; $0F
 	zoneTableEntry.l Demo_EHZ	; $10
+	zoneTableEntry.l Demo_EHZ	; $11
+	zoneTableEntry.l Demo_EHZ	; $12
     zoneTableEnd
 ; ---------------------------------------------------------------------------
 ; dword_498C:
@@ -5273,6 +5306,8 @@ Off_ColP: zoneOrderedTable 4,1
 	zoneTableEntry.l ColP_CPZDEZ	; 14
 	zoneTableEntry.l ColP_ARZ	; 15
 	zoneTableEntry.l ColP_WFZSCZ	; 16
+	zoneTableEntry.l ColP_GHZ	; 17
+	zoneTableEntry.l ColP_GHZ	; 18
     zoneTableEnd
 
 ; ---------------------------------------------------------------------------
@@ -5300,6 +5335,8 @@ Off_ColS: zoneOrderedTable 4,1
 	zoneTableEntry.l ColS_CPZDEZ	; 14
 	zoneTableEntry.l ColS_ARZ	; 15
 	zoneTableEntry.l ColS_WFZSCZ	; 16
+	zoneTableEntry.l ColS_GHZ	; 17
+	zoneTableEntry.l ColS_GHZ	; 18
     zoneTableEnd
 
 
@@ -14147,6 +14184,10 @@ LevelSize: zoneOrderedTable 2,8	; WrdArr_LvlSize
 	zoneTableEntry.w	$0,	$3FFF,	$180,	$710	; ARZ act 2
 	zoneTableEntry.w	$0,	$3FFF,	$0,	$000	; SCZ
 	zoneTableEntry.w	$0,	$3FFF,	$0,	$720
+	zoneTableEntry.w	$0,	$24BF,	$0,	$300	; GHZ act 1
+	zoneTableEntry.w	$0,	$1EBF,	$0,	$300	; GHZ act 2
+	zoneTableEntry.w	$0,	$2960,	$0,	$300	; GHZ act 3
+	zoneTableEntry.w	$0,	$3FFF,	$0,	$720	; GHZ unused
     zoneTableEnd
 
 ; ===========================================================================
@@ -14237,6 +14278,10 @@ StartLocations: zoneOrderedTable 2,4	; WrdArr_StartLoc
 	zoneTableBinEntry	2, "startpos/ARZ_2.bin"
 	zoneTableBinEntry	2, "startpos/SCZ.bin"	; $10
 	zoneTableEntry.w	$140,	$70
+	zoneTableBinEntry	2, "startpos/GHZ_1.bin"	; $11
+	zoneTableBinEntry	2, "startpos/GHZ_2.bin"
+	zoneTableBinEntry	2, "startpos/GHZ_3.bin" ; $12
+	zoneTableEntry.w	$140,	$70
     zoneTableEnd
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -14283,6 +14328,8 @@ InitCam_Index: zoneOrderedOffsetTable 2,1
 	zoneOffsetTableEntry.w InitCam_Null3	; 14
 	zoneOffsetTableEntry.w InitCam_ARZ	; 15
 	zoneOffsetTableEntry.w InitCam_SCZ	; 16
+	zoneOffsetTableEntry.w InitCam_EHZ	; 17
+	zoneOffsetTableEntry.w InitCam_EHZ	; 18
     zoneTableEnd
 ; ===========================================================================
 ;loc_C2B8:
@@ -14576,7 +14623,13 @@ SwScrl_Index: zoneOrderedOffsetTable 2,1	; JmpTbl_SwScrlMgr
 	zoneOffsetTableEntry.w SwScrl_DEZ	; $0E
 	zoneOffsetTableEntry.w SwScrl_ARZ	; $0F
 	zoneOffsetTableEntry.w SwScrl_SCZ	; $10
+	zoneOffsetTableEntry.w SwScrl_GHZ	; $11
+	zoneOffsetTableEntry.w SwScrl_GHZ	; $12
     zoneTableEnd
+; ===========================================================================
+
+	include	"level/Deform Layers.asm"
+
 ; ===========================================================================
 ; loc_C51E:
 SwScrl_Title:
@@ -16998,7 +17051,7 @@ SetHorizScrollFlagsBG2:	; only used by CPZ
 
 ; ===========================================================================
 ; some apparently unused code
-;SetHorizScrollFlagsBG3:
+SetHorizScrollFlagsBG3:
 	move.l	(Camera_BG3_X_pos).w,d2
 	move.l	d2,d0
 	add.l	d4,d0
@@ -18512,7 +18565,13 @@ DynamicLevelEventIndex: zoneOrderedOffsetTable 2,1
 	zoneOffsetTableEntry.w LevEvents_DEZ	;  $E ; DEZ
 	zoneOffsetTableEntry.w LevEvents_ARZ	;  $F ; ARZ
 	zoneOffsetTableEntry.w LevEvents_SCZ	; $10 ; SCZ
+	zoneOffsetTableEntry.w LevEvents_GHZ	; $10 ; GHZ
+	zoneOffsetTableEntry.w LevEvents_GHZ	; $11 ; GHZ3
     zoneTableEnd
+; ===========================================================================
+
+	include "level/Dynamic Level Events.asm"
+
 ; ===========================================================================
 ; loc_E658:
 LevEvents_EHZ:
@@ -22525,6 +22584,8 @@ zoneAnimals macro first,second
 	zoneAnimals.b Pig,	Chicken	; DEZ
 	zoneAnimals.b Penguin,	Bird	; ARZ
 	zoneAnimals.b Turtle,	Chicken	; SCZ
+	zoneAnimals.b Squirrel,	Bird	; GHZ
+	zoneAnimals.b Squirrel,	Bird	; GHZ
     zoneTableEnd
 
 ; word_118F0:
@@ -25176,12 +25237,12 @@ titlecardobjdata macro routine,frame,width,duration,xstart,xstop,y
     endm
 ; word_13CD4:
 Obj34_TitleCardData:
-	titlecardobjdata  8,   0, $80, $1B, $240, $120, $B8	; zone name
-	titlecardobjdata $A, $11, $40, $1C,  $28, $148, $D0	; "ZONE"
-	titlecardobjdata $C, $12, $18, $1C,  $68, $188, $D0	; act number
-	titlecardobjdata  2,   0,   0,   0,    0,    0,   0	; blue background
-	titlecardobjdata  4, $15, $48,   8, $2A8, $168,$120	; bottom yellow part
-	titlecardobjdata  6, $16,   8, $15,  $80,  $F0, $F0	; left red part
+	titlecardobjdata  8,   0,	      $80, $1B, $240, $120, $B8	; zone name
+	titlecardobjdata $A, no_of_zones, $40, $1C,  $28, $148, $D0	; "ZONE"
+	titlecardobjdata $C, no_of_zones+1, $18, $1C,  $68, $188, $D0	; act number
+	titlecardobjdata  2,   0,		0,   0,    0,    0,   0	; blue background
+	titlecardobjdata  4, no_of_zones+4, $48,   8, $2A8, $168,$120	; bottom yellow part
+	titlecardobjdata  6, no_of_zones+5,	8, $15,  $80,  $F0, $F0	; left red part
 Obj34_TitleCardData_End:
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
@@ -25290,10 +25351,14 @@ Obj34_ActNumber:	; the act number, coming in
 	cmpi.b	#death_egg_zone,d0	; is it Death Egg Zone?
 	beq.s	BranchTo9_DeleteObject	; if yes, branch
 	move.b	(Current_Act).w,d1	; get the current act
-	addi.b	#$12,d1			; add $12 to it (this is the index of the "1" frame in the mappings)
+	addi.b	#no_of_zones+1,d1	; Act number mappings (Act 1)
 	cmpi.b	#metropolis_zone_2,d0	; are we in Metropolis Zone Act 3?
 	bne.s	+			; if not, branch
-	moveq	#$14,d1			; use the "3" frame instead
+	moveq	#no_of_zones+3,d1	; Act number mappings (Act 3).  Used for drawing MTZ (0x05) titlecard only
++
+	cmpi.b	#green_hill_zone_2,d0	; are we in Green Hill Zone Act 3?
+	bne.s	+			; if not, branch
+	moveq	#no_of_zones+3,d1	; Act number mappings (Act 3).  Used for drawing MTZ (0x05) titlecard only
 +
 	move.b	d1,mapping_frame(a0)	; set the mapping frame
 
@@ -25461,6 +25526,8 @@ Animal_PLCTable: zoneOrderedTable 1,1
 	zoneTableEntry.b PLCID_DezAnimals	; $E
 	zoneTableEntry.b PLCID_ArzAnimals	; $F
 	zoneTableEntry.b PLCID_SczAnimals	; $10
+	zoneTableEntry.b PLCID_EhzAnimals	; $11
+	zoneTableEntry.b PLCID_EhzAnimals	; $12
     zoneTableEnd
 
 	dc.b PLCID_SczAnimals	; level slot $11 (non-existent), not part of main table
@@ -25871,6 +25938,10 @@ LevelOrder: zoneOrderedTable 2,2	; WrdArr_LevelOrder
 	zoneTableEntry.w  casino_night_zone_act_1	; 31
 	zoneTableEntry.w  wing_fortress_zone_act_1 	; 32
 	zoneTableEntry.w  emerald_hill_zone_act_1	; 33
+	zoneTableEntry.w  green_hill_zone_act_2		; 34
+	zoneTableEntry.w  green_hill_zone_act_3		; 35
+	zoneTableEntry.w  emerald_hill_zone_act_1	; 36
+	zoneTableEntry.w  emerald_hill_zone_act_1	; 37
     zoneTableEnd
 
 ;word_1433C:
@@ -25909,6 +25980,10 @@ LevelOrder_2P: zoneOrderedTable 2,2	; WrdArr_LevelOrder_2P
 	zoneTableEntry.w  casino_night_zone_act_1	; 31
 	zoneTableEntry.w  wing_fortress_zone_act_1 	; 32
 	zoneTableEntry.w  emerald_hill_zone_act_1	; 33
+	zoneTableEntry.w  green_hill_zone_act_2		; 34
+	zoneTableEntry.w  green_hill_zone_act_3		; 35
+	zoneTableEntry.w  emerald_hill_zone_act_1	; 36
+	zoneTableEntry.w  emerald_hill_zone_act_1	; 37
     zoneTableEnd
 
 byte_14380:
@@ -26297,191 +26372,277 @@ byte_14752:
 	results_screen_object  $340, $120, $118, $16,  $D		; Sonic Rings
 	results_screen_object  $350, $120, $128, $18,  $E		; Miles Rings
 	results_screen_object  $360, $120, $138, $1A, $10		; Gems Bonus
+
+; -------------------------------------------------------------------------------
+; sprite mappings
+; -------------------------------------------------------------------------------
+word_14BC8: ;keep this line to prevent errors
+	dc.w 4 ; number of letters
+	dc.w 5, $858C, $82C6,     0 ;Z
+	dc.w 5, $8588, $82C4,   $10 ;O
+	dc.w 5, $8584, $82C2,   $20 ;N
+	dc.w 5, $8580, $82C0,   $30 ;E
+word_14BEA: ;keep this line to prevent errors
+	dc.w $1 ; number of digits
+	dc.w 7, $A590, $A2C8,     0 ;1
+word_14BF4: ;keep this line to prevent errors
+	dc.w $1 ; number of digits
+	dc.w $B, $A598, $A2CC,    0 ;2
+word_14BFE: ;keep this line to prevent errors
+	dc.w $1 ; number of digits
+	dc.w $B, $A5A4, $A2D2,    0 ;3
+
 ; -------------------------------------------------------------------------------
 ; sprite mappings
 ; -------------------------------------------------------------------------------
 Obj34_MapUnc_147BA:	offsetTable
-	offsetTableEntry.w word_147E8
-	offsetTableEntry.w word_147E8
-	offsetTableEntry.w word_147E8
-	offsetTableEntry.w word_147E8
-	offsetTableEntry.w word_14842
-	offsetTableEntry.w word_14842
-	offsetTableEntry.w word_14B24
-	offsetTableEntry.w word_14894
-	offsetTableEntry.w word_148CE
-	offsetTableEntry.w word_147E8
-	offsetTableEntry.w word_14930
-	offsetTableEntry.w word_14972
-	offsetTableEntry.w word_149C4
-	offsetTableEntry.w word_14A1E
-	offsetTableEntry.w word_14B86
-	offsetTableEntry.w word_14A88
-	offsetTableEntry.w word_14AE2
-	offsetTableEntry.w word_14BC8
-	offsetTableEntry.w word_14BEA
-	offsetTableEntry.w word_14BF4
-	offsetTableEntry.w word_14BFE
-	offsetTableEntry.w word_14C08
-	offsetTableEntry.w word_14C32
-word_147E8:	dc.w $B
-	dc.w 5,	$8580, $82C0, $FFC3
-	dc.w 9,	$85DE, $82EF, $FFD0
-	dc.w 5,	$8580, $82C0, $FFE8
-	dc.w 5,	$85E4, $82F2, $FFF8
-	dc.w 5,	$85E8, $82F4, 8
-	dc.w 5,	$85EC, $82F6, $18
-	dc.w 5,	$85F0, $82F8, $28
-	dc.w 5,	$85F4, $82FA, $48
-	dc.w 1,	$85F8, $82FC, $58
-	dc.w 5,	$85EC, $82F6, $60
-	dc.w 5,	$85EC, $82F6, $70
-word_14842:	dc.w $A
-	dc.w 9,	$85DE, $82EF, $FFE0
-	dc.w 5,	$8580, $82C0, $FFF8
-	dc.w 5,	$85E4, $82F2, 8
-	dc.w 5,	$85E8, $82F4, $18
-	dc.w 5,	$8588, $82C4, $28
-	dc.w 5,	$85EC, $82F6, $38
-	dc.w 5,	$8588, $82C4, $48
-	dc.w 5,	$85F0, $82F8, $58
-	dc.w 1,	$85F4, $82FA, $68
-	dc.w 5,	$85F6, $82FB, $70
-word_14894:	dc.w 7
-	dc.w 5,	$85DE, $82EF, 8
-	dc.w 1,	$85E2, $82F1, $18
-	dc.w 5,	$85E4, $82F2, $20
-	dc.w 5,	$85E4, $82F2, $30
-	dc.w 5,	$85E8, $82F4, $51
-	dc.w 5,	$8588, $82C4, $60
-	dc.w 5,	$85EC, $82F6, $70
-word_148CE:	dc.w $C
-	dc.w 5,	$85DE, $82EF, $FFB8
-	dc.w 1,	$85E2, $82F1, $FFC8
-	dc.w 5,	$85E4, $82F2, $FFD0
-	dc.w 5,	$85E4, $82F2, $FFE0
-	dc.w 5,	$8580, $82C0, $FFF0
-	dc.w 5,	$8584, $82C2, 0
-	dc.w 5,	$85E8, $82F4, $20
-	dc.w 5,	$85EC, $82F6, $30
-	dc.w 5,	$85F0, $82F8, $40
-	dc.w 5,	$85EC, $82F6, $50
-	dc.w 5,	$85F4, $82FA, $60
-	dc.w 5,	$8580, $82C0, $70
-word_14930:	dc.w 8
-	dc.w 5,	$8588, $82C4, $FFFB
-	dc.w 1,	$85DE, $82EF, $B
-	dc.w 5,	$85E0, $82F0, $13
-	dc.w 5,	$8588, $82C4, $33
-	dc.w 5,	$85E4, $82F2, $43
-	dc.w 5,	$8580, $82C0, $53
-	dc.w 5,	$85E8, $82F4, $60
-	dc.w 5,	$8584, $82C2, $70
-word_14972:	dc.w $A
-	dc.w 9,	$85DE, $82EF, $FFD0
-	dc.w 5,	$85E4, $82F2, $FFE8
-	dc.w 5,	$85E8, $82F4, $FFF8
-	dc.w 5,	$85EC, $82F6, 8
-	dc.w 1,	$85F0, $82F8, $18
-	dc.w 5,	$85F2, $82F9, $20
-	dc.w 5,	$85F2, $82F9, $41
-	dc.w 5,	$85F6, $82FB, $50
-	dc.w 5,	$85FA, $82FD, $60
-	dc.w 5,	$8580, $82C0, $70
-word_149C4:	dc.w $B
-	dc.w 5,	$85DE, $82EF, $FFD1
-	dc.w 5,	$85E2, $82F1, $FFE0
-	dc.w 5,	$85E6, $82F3, $FFF0
-	dc.w 1,	$85EA, $82F5, 0
-	dc.w 5,	$8584, $82C2, 8
-	dc.w 5,	$8588, $82C4, $18
-	dc.w 5,	$8584, $82C2, $38
-	dc.w 1,	$85EA, $82F5, $48
-	dc.w 5,	$85EC, $82F6, $50
-	dc.w 5,	$85F0, $82F8, $60
-	dc.w 5,	$85F4, $82FA, $70
-word_14A1E:	dc.w $D
-	dc.w 5,	$85DE, $82EF, $FFA4
-	dc.w 5,	$85E2, $82F1, $FFB4
-	dc.w 5,	$8580, $82C0, $FFC4
-	dc.w 9,	$85E6, $82F3, $FFD1
-	dc.w 1,	$85EC, $82F6, $FFE9
-	dc.w 5,	$85DE, $82EF, $FFF1
-	dc.w 5,	$85EE, $82F7, 0
-	dc.w 5,	$85F2, $82F9, $10
-	dc.w 5,	$85F6, $82FB, $31
-	dc.w 5,	$85F2, $82F9, $41
-	dc.w 5,	$85EE, $82F7, $50
-	dc.w 5,	$8584, $82C2, $60
-	dc.w 5,	$85FA, $82FD, $70
-word_14A88:	dc.w $B
-	dc.w 5,	$85DE, $82EF, $FFD2
-	dc.w 5,	$85E2, $82F1, $FFE2
-	dc.w 5,	$85E6, $82F3, $FFF2
-	dc.w 5,	$85DE, $82EF, 0
-	dc.w 5,	$85EA, $82F5, $10
-	dc.w 1,	$85EE, $82F7, $20
-	dc.w 5,	$85F0, $82F8, $28
-	dc.w 5,	$85F4, $82FA, $48
-	dc.w 5,	$85E6, $82F3, $58
-	dc.w 1,	$85EE, $82F7, $68
-	dc.w 5,	$8584, $82C2, $70
-word_14AE2:	dc.w 8
-	dc.w 5,	$85DE, $82EF, $FFF0
-	dc.w 5,	$85E2, $82F1, 0
-	dc.w 5,	$85E6, $82F3, $10
-	dc.w 5,	$85EA, $82F5, $30
-	dc.w 5,	$85EE, $82F7, $40
-	dc.w 5,	$85F2, $82F9, $50
-	dc.w 5,	$85DE, $82EF, $60
-	dc.w 5,	$8580, $82C0, $70
-word_14B24:	dc.w $C
-	dc.w 9,	$85DE, $82EF, $FFB1
-	dc.w 1,	$85E4, $82F2, $FFC8
-	dc.w 5,	$8584, $82C2, $FFD0
-	dc.w 5,	$85E6, $82F3, $FFE0
-	dc.w 5,	$85EA, $82F5, 1
-	dc.w 5,	$8588, $82C4, $10
-	dc.w 5,	$85EE, $82F7, $20
-	dc.w 5,	$85F2, $82F9, $30
-	dc.w 5,	$85EE, $82F7, $40
-	dc.w 5,	$8580, $82C0, $50
-	dc.w 5,	$85F6, $82FB, $5F
-	dc.w 5,	$85F6, $82FB, $6F
-word_14B86:	dc.w 8
-	dc.w 5,	$85DE, $82EF, $FFF2
-	dc.w 5,	$8580, $82C0, 2
-	dc.w 5,	$85E2, $82F1, $10
-	dc.w 5,	$85E6, $82F3, $20
-	dc.w 5,	$85EA, $82F5, $30
-	dc.w 5,	$8580, $82C0, $51
-	dc.w 5,	$85EE, $82F7, $60
-	dc.w 5,	$85EE, $82F7, $70
-word_14BC8:	dc.w 4
-	dc.w 5,	$858C, $82C6, 1
-	dc.w 5,	$8588, $82C4, $10
-	dc.w 5,	$8584, $82C2, $20
-	dc.w 5,	$8580, $82C0, $30
-word_14BEA:	dc.w 1
-	dc.w 7,	$A590, $A2C8, 0
-word_14BF4:	dc.w 1
-	dc.w $B, $A598,	$A2CC, 0
-word_14BFE:	dc.w 1
-	dc.w $B, $A5A4,	$A2D2, 0
-word_14C08:	dc.w 5
-	dc.w $D, $85B0,	$82D8, $FFB8
-	dc.w $D, $85B8,	$82DC, $FFD8
-	dc.w $D, $85C0,	$82E0, $FFF8
-	dc.w $D, $85C8,	$82E4, $18
-	dc.w 5,	$85D0, $82E8, $38
-word_14C32:	dc.w 7
-	dc.w $9003, $85D4, $82EA, 0
-	dc.w $B003, $85D4, $82EA, 0
-	dc.w $D003, $85D4, $82EA, 0
-	dc.w $F003, $85D4, $82EA, 0
-	dc.w $1003, $85D4, $82EA, 0
-	dc.w $3003, $85D4, $82EA, 0
-	dc.w $5003, $85D4, $82EA, 0
+	offsetTableEntry.w TitleCard_EHZ ; EHZ 00 
+	offsetTableEntry.w TitleCard_EHZ ; EHZ 01 
+	offsetTableEntry.w TitleCard_EHZ ; EHZ 02 
+	offsetTableEntry.w TitleCard_EHZ ; EHZ 03 
+	offsetTableEntry.w TitleCard_MTZ ; MTZ 04
+	offsetTableEntry.w TitleCard_MTZ ; MTZ 05
+	offsetTableEntry.w TitleCard_WFZ ; WFZ 06
+	offsetTableEntry.w TitleCard_HTZ ; HTZ 07
+	offsetTableEntry.w TitleCard_HPZ ; HPZ 08
+	offsetTableEntry.w TitleCard_EHZ ; EHZ 09 
+	offsetTableEntry.w TitleCard_OOZ ; OOZ 0A
+	offsetTableEntry.w TitleCard_MCZ ; MCZ 0B
+	offsetTableEntry.w TitleCard_CNZ ; CNZ 0C
+	offsetTableEntry.w TitleCard_CPZ ; CPZ 0D
+	offsetTableEntry.w TitleCard_DEZ ; DEZ 0E
+	offsetTableEntry.w TitleCard_ARZ ; ARZ 0F
+	offsetTableEntry.w TitleCard_SCZ ; SCZ 10
+	offsetTableEntry.w TitleCard_GHZ ; GHZ 11
+	offsetTableEntry.w TitleCard_GHZ ; GHZ 12
+	offsetTableEntry.w T_ZONE	 ; "ZONE"
+	offsetTableEntry.w T_ACT1	 ; "1"
+	offsetTableEntry.w T_ACT2	 ; "2"
+	offsetTableEntry.w T_ACT3	 ; "3"
+	offsetTableEntry.w T_STH	 ; "SONIC THE HEDGEHOG"
+	offsetTableEntry.w T_STRIPEDGE	 ; ">"
+
+
+TitleCard_GHZ:
+	dc.w $9				; GREEN HILL
+	dc.w $0005, $85DE, $82EF, $FFE8	; G
+	dc.w $0005, $85E2, $82F1, $FFF8	; R
+	dc.w $0005, $8580, $82C0, $0008	; E
+	dc.w $0005, $8580, $82C0, $0018	; E
+	dc.w $0005, $8584, $82C2, $0028	; N
+
+	dc.w $0005, $85E6, $82F3, $0048	; H
+	dc.w $0001, $85EA, $82F5, $0058	; I
+	dc.w $0005, $85EC, $82F6, $0060	; L
+	dc.w $0005, $85EC, $82F6, $0070	; L
+
+
+TitleCard_EHZ:
+	dc.w 11 ; number of letters
+	dc.w 5,	$8580, $82C0, $FFC3 ;E
+	dc.w 9,	$85DE, $82EF, $FFD0 ;M
+	dc.w 5, $8580, $82C0, $FFE8 ;E
+	dc.w 5, $85E4, $82F2, $FFF8 ;R
+	dc.w 5, $85E8, $82F4,     8 ;A
+	dc.w 5, $85EC, $82F6,   $18 ;L
+	dc.w 5, $85F0, $82F8,   $28 ;D
+ 
+	dc.w 5, $85F4, $82FA,   $48 ;H
+	dc.w 1, $85F8, $82F2,   $58 ;I
+	dc.w 5, $85EC, $82F6,   $60 ;L
+	dc.w 5, $85EC, $82F6,   $70 ;L
+ 
+ 
+TitleCard_MTZ:
+	dc.w 10 ; number of letters
+	dc.w 9, $85DE, $82EF, $FFE0 ;M
+	dc.w 5, $8580, $82C0, $FFF8 ;E
+	dc.w 5, $85E4, $82F2,     8 ;T
+	dc.w 5, $85E8, $82F4,   $18 ;R
+	dc.w 5, $8588, $82C4,   $28 ;O
+	dc.w 5, $85EC, $82F6,   $38 ;P
+	dc.w 5, $8588, $82C4,   $48 ;O
+	dc.w 5, $85F0, $82F8,   $58 ;L
+	dc.w 1, $85F4, $82FA,   $68 ;I
+	dc.w 5, $85F6, $82FB,   $70 ;S
+ 
+TitleCard_WFZ:
+	dc.w 12 ; number of letters
+	dc.w 9, $85DE, $82EF, $FFB0 ;W
+	dc.w 1, $85E4, $82F2, $FFC8 ;I
+	dc.w 5, $8584, $82C2, $FFD0 ;N
+	dc.w 5, $85E6, $82F3, $FFE0 ;G
+ 
+	dc.w 5, $85EA, $82F5,     0 ;F
+	dc.w 5, $8588, $82C4,   $10 ;O
+	dc.w 5, $85EE, $82F7,   $20 ;R
+	dc.w 5, $85F2, $82F9,   $30 ;T
+	dc.w 5, $85EE, $82F7,   $40 ;R
+	dc.w 5, $8580, $82C0,   $50 ;E
+	dc.w 5, $85F6, $82FB,   $60 ;S
+	dc.w 5, $85F6, $82FB,   $70 ;S
+ 
+TitleCard_HTZ:
+	dc.w 7 ; number of letters
+	dc.w 5, $85DE, $82EF,     8 ;H
+	dc.w 1, $85E2, $82F1,   $18 ;I
+	dc.w 5, $85E4, $82F2,   $20 ;L
+	dc.w 5, $85E4, $82F2,   $30 ;L
+ 
+	dc.w 5, $85E8, $82F4,   $50 ;T
+	dc.w 5, $8588, $82C4,   $60 ;O
+	dc.w 5, $85EC, $82F6,   $70 ;P
+ 
+TitleCard_HPZ:
+	dc.w 12 ; number of letters
+	dc.w 5, $85DE, $82EF, $FFB8 ;H
+	dc.w 1, $85E2, $82F1, $FFC8 ;I
+	dc.w 5, $85E4, $82F2, $FFD0 ;D
+	dc.w 5, $85E4, $82F2, $FFE0 ;D
+	dc.w 5, $8580, $82C0, $FFF0 ;E
+	dc.w 5, $8584, $82C4,     0 ;N
+ 
+	dc.w 5, $85E8, $82F4,   $20 ;P
+	dc.w 5, $85EC, $82F6,   $30 ;A
+	dc.w 5, $85F0, $82F8,   $40 ;L
+	dc.w 5, $85EC, $82F6,   $50 ;A
+	dc.w 5, $85F4, $82FA,   $60 ;C
+	dc.w 5, $8580, $82C0,   $70 ;E
+ 
+TitleCard_OOZ:
+	dc.w 8 ; number of letters
+	dc.w 5, $8588, $82C4, $FFF8 ;O
+	dc.w 1, $85DE, $82EF,     8 ;I
+	dc.w 5, $85E0, $82F0,   $10 ;L
+ 
+	dc.w 5, $8588, $82C4,   $30 ;O
+	dc.w 5, $85E4, $82F2,   $40 ;C
+	dc.w 5, $8580, $82C0,   $50 ;E
+	dc.w 5, $85E8, $82F4,   $60 ;A
+	dc.w 5, $8584, $82C2,   $70 ;N
+ 
+TitleCard_MCZ:
+	dc.w 10 ; number of letters
+	dc.w 9, $85DE, $82EF, $FFD0 ;M
+	dc.w 5, $85E4, $82F2, $FFE8 ;Y
+	dc.w 5, $85E8, $82F4, $FFF8 ;S
+	dc.w 5, $85EC, $82F6,     8 ;T
+	dc.w 1, $85F0, $82F8,   $18 ;I
+	dc.w 5, $85F2, $82F9,   $20 ;C
+ 
+	dc.w 5, $85F2, $82F9,   $40 ;C
+	dc.w 5, $85F6, $82FB,   $50 ;A
+	dc.w 5, $85FA, $82FD,   $60 ;V
+	dc.w 5, $8580, $82C0,   $70 ;E
+ 
+TitleCard_CNZ:
+	dc.w 11 ; number of letters
+	dc.w 5, $85DE, $82EF, $FFD0 ;C
+	dc.w 5, $85E2, $82F1, $FFE0 ;A
+	dc.w 5, $85E6, $82F3, $FFF0 ;S
+	dc.w 1, $85EA, $82F5,     0 ;I
+	dc.w 5, $8584, $82C2,     8 ;N
+	dc.w 5, $8588, $82C4,   $18 ;O
+ 
+	dc.w 5, $8584, $82C2,   $38 ;N
+	dc.w 1, $85EA, $82F5,   $48 ;I
+	dc.w 5, $85EC, $82F6,   $50 ;G
+	dc.w 5, $85F0, $82F8,   $60 ;H
+	dc.w 5, $85F4, $82FA,   $70 ;T
+ 
+TitleCard_CPZ:
+	dc.w 13 ; number of letters
+	dc.w 5, $85DE, $82EF, $FFA0 ;C
+	dc.w 5, $85E2, $82F1, $FFB0 ;H
+	dc.w 5, $8580, $82C0, $FFC0 ;E
+	dc.w 9, $85E6, $82F3, $FFD0 ;M
+	dc.w 1, $85EC, $82F6, $FFE8 ;I
+	dc.w 5, $85DE, $82EF, $FFF0 ;C
+	dc.w 5, $85EE, $82F7,     0 ;A
+	dc.w 5, $85F2, $82F9,   $10 ;L
+ 
+	dc.w 5, $85F6, $82FB,   $30 ;P
+	dc.w 5, $85F2, $82F9,   $40 ;L
+	dc.w 5, $85EE, $82F7,   $50 ;A
+	dc.w 5, $8584, $82C2,   $60 ;N
+	dc.w 5, $85FA, $82FD,   $70 ;T
+ 
+TitleCard_DEZ:
+	dc.w 8 ; number of letters
+	dc.w 5, $85DE, $82EF, $FFF0 ;D
+	dc.w 5, $8580, $82C0,     0 ;E
+	dc.w 5, $85E2, $82F1,   $10 ;A
+	dc.w 5, $85E6, $82F3,   $20 ;T
+	dc.w 5, $85EA, $82F5,   $30 ;H
+ 
+	dc.w 5, $8580, $82C0,   $50 ;E
+	dc.w 5, $85EE, $82F7,   $60 ;G
+	dc.w 5, $85EE, $82F7,   $70 ;G
+ 
+TitleCard_ARZ:
+	dc.w 11 ; number of letters
+	dc.w 5, $85DE, $82EF, $FFD0 ;A
+	dc.w 5, $85E2, $82F1, $FFE0 ;Q
+	dc.w 5, $85E6, $82F3, $FFF0 ;U
+	dc.w 5, $85DE, $82EF,     0 ;A
+	dc.w 5, $85EA, $82F5,   $10 ;T
+	dc.w 1, $85EE, $82F7,   $20 ;I
+	dc.w 5, $85F0, $82F8,   $28 ;C
+ 
+	dc.w 5, $85F4, $82FA,   $48 ;R
+	dc.w 5, $85E6, $82F3,   $58 ;U
+	dc.w 1, $85EE, $82F7,   $68 ;I
+	dc.w 5, $8584, $82C2,   $70 ;N
+ 
+TitleCard_SCZ:
+	dc.w 8 ; number of letters
+	dc.w 5, $85DE, $82EF, $FFF0 ;S
+	dc.w 5, $85E2, $82F1,     0 ;K
+	dc.w 5, $85E6, $82F3,   $10 ;Y
+ 
+	dc.w 5, $85EA, $82F5,   $30 ;C
+	dc.w 5, $85EE, $82F7,   $40 ;H
+	dc.w 5, $85F2, $82F7,   $50 ;A
+	dc.w 5, $85DE, $82EF,   $60 ;S
+	dc.w 5, $8580, $82C0,   $70 ;E
+ 
+T_ZONE:
+	dc.w 4 ; number of letters
+	dc.w 5, $858C, $82C6,     0 ;Z
+	dc.w 5, $8588, $82C4,   $10 ;O
+	dc.w 5, $8584, $82C2,   $20 ;N
+	dc.w 5, $8580, $82C0,   $30 ;E
+ 
+T_ACT1:
+	dc.w $1 ; number of digits
+	dc.w 7, $A590, $A2C8,     0 ;1
+ 
+T_ACT2:
+	dc.w $1 ; number of digits
+	dc.w $B, $A598, $A2CC,    0 ;2
+ 
+T_ACT3:
+	dc.w $1 ; number of digits
+	dc.w $B, $A5A4, $A2D2,    0 ;3
+ 
+T_STH:
+	dc.w $5 ; number of tiles (what they say is below)
+	dc.w $D, $85B0, $82DE, $FFB8 ;SONI
+	dc.w $D, $85B8, $82DC, $FFD8 ;C TH
+	dc.w $D, $85C0, $82E0, $FFF8 ;E HE
+	dc.w $D, $85C8, $82E4,   $18 ;DGEH
+	dc.w $5, $85D0, $82E8,   $38 ;OG
+ 
+T_STRIPEDGE:
+	dc.w $7 ; number of tiles (to display strip edge)
+	dc.w $9003, $85D4, $82EA, 0 ;>
+	dc.w $B003, $85D4, $82EA, 0 ;>
+	dc.w $D003, $85D4, $82EA, 0 ;>
+	dc.w $F003, $85D4, $82EA, 0 ;>
+	dc.w $1003, $85D4, $82EA, 0 ;>
+	dc.w $3003, $85D4, $82EA, 0 ;>
+	dc.w $5003, $85D4, $82EA, 0 ;>
+; ==================================================================
 ; -------------------------------------------------------------------------------
 ; sprite mappings
 ; -------------------------------------------------------------------------------
@@ -26839,9 +27000,9 @@ LoadTitleCard:
 	bsr.s	LoadTitleCard0
 	moveq	#0,d0
 	move.b	(Current_Zone).w,d0
-	move.b	Off_TitleCardLetters(pc,d0.w),d0
-	lea	TitleCardLetters(pc),a0
-	lea	(a0,d0.w),a0
+	add.w	d0,d0
+	move.w	Off_TitleCardLetters(pc,d0.w),d0
+	lea	Off_TitleCardLetters(pc,d0.w),a0
 	move.l	#vdpComm(tiles_to_bytes(ArtTile_LevelName),VRAM,WRITE),d0
 
 loc_157EC:
@@ -26872,25 +27033,26 @@ loc_1581A:
 	rts
 ; ===========================================================================
 ; byte_15820:
-Off_TitleCardLetters:
-	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 0
-	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 1
-	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 2
-	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 3
-	dc.b TitleCardLetters_MTZ - TitleCardLetters	; 4
-	dc.b TitleCardLetters_MTZ - TitleCardLetters	; 5
-	dc.b TitleCardLetters_WFZ - TitleCardLetters	; 6
-	dc.b TitleCardLetters_HTZ - TitleCardLetters	; 7
-	dc.b TitleCardLetters_HPZ - TitleCardLetters	; 8
-	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 9
-	dc.b TitleCardLetters_OOZ - TitleCardLetters	; A
-	dc.b TitleCardLetters_MCZ - TitleCardLetters	; B
-	dc.b TitleCardLetters_CNZ - TitleCardLetters	; C
-	dc.b TitleCardLetters_CPZ - TitleCardLetters	; D
-	dc.b TitleCardLetters_DEZ - TitleCardLetters	; E
-	dc.b TitleCardLetters_ARZ - TitleCardLetters	; F
-	dc.b TitleCardLetters_SCZ - TitleCardLetters	; 10
-	even
+Off_TitleCardLetters:	offsetTable
+	offsetTableEntry.w TitleCardLetters_EHZ ; EHZ Titlecard 00
+	offsetTableEntry.w TitleCardLetters_EHZ ; EHZ Titlecard 01
+	offsetTableEntry.w TitleCardLetters_EHZ ; EHZ Titlecard 02
+	offsetTableEntry.w TitleCardLetters_EHZ ; EHZ Titlecard 03
+	offsetTableEntry.w TitleCardLetters_MTZ ; MTZ Titlecard 04
+	offsetTableEntry.w TitleCardLetters_MTZ ; MTZ Titlecard 05
+	offsetTableEntry.w TitleCardLetters_WFZ ; WFZ Titlecard 06
+	offsetTableEntry.w TitleCardLetters_HTZ ; HTZ Titlecard 07
+	offsetTableEntry.w TitleCardLetters_HPZ ; HPZ Titlecard 08
+	offsetTableEntry.w TitleCardLetters_EHZ ; EHZ Titlecard 09
+	offsetTableEntry.w TitleCardLetters_OOZ ; OOZ Titlecard 0A
+	offsetTableEntry.w TitleCardLetters_MCZ ; MCZ Titlecard 0B
+	offsetTableEntry.w TitleCardLetters_CNZ ; CNZ Titlecard 0C
+	offsetTableEntry.w TitleCardLetters_CPZ ; CPZ Titlecard 0D
+	offsetTableEntry.w TitleCardLetters_DEZ ; DEZ Titlecard 0E
+	offsetTableEntry.w TitleCardLetters_ARZ ; ARZ Titlecard 0F
+	offsetTableEntry.w TitleCardLetters_SCZ ; SCZ Titlecard 10
+	offsetTableEntry.w TitleCardLetters_GHZ ; GHZ Titlecard 11
+	offsetTableEntry.w TitleCardLetters_GHZ ; GHZ Titlecard 12
 
  ; temporarily remap characters to title card letter format
  ; Characters are encoded as Aa, Bb, Cc, etc. through a macro
@@ -26931,6 +27093,8 @@ TitleCardLetters_WFZ:
 	titleLetters	"WING FORTRESS"
 TitleCardLetters_DEZ:
 	titleLetters	"DEATH EGG"
+TitleCardLetters_GHZ:
+	titleLetters	"GREEN HILL"
 
  charset ; revert character set
 
@@ -31871,6 +32035,9 @@ loc_19208:
 	beq.s	loc_1921E
 	tst.b	(Current_Act).w
 	beq.s	loc_1921E
+	; this is because the end of level signpost disappeared in acts 2
+	cmpi.w	#green_hill_zone,(Current_Zone).w
+	bge.s	loc_1921E
 	move.w	#0,x_pos(a0)
 	rts
 ; ---------------------------------------------------------------------------
@@ -40120,6 +40287,10 @@ loc_1E7F0:	; block has some solidity
 	andi.w	#$FF,d0
 	beq.s	loc_1E7E2
 	lea	(ColCurveMap).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColCurveMapS1).l,a2
++
 	move.b	(a2,d0.w),(a4)	; get angle from AngleMap --> (a4)
 	lsl.w	#4,d0
 	move.w	d3,d1	; x_pos
@@ -40137,6 +40308,10 @@ loc_1E7F0:	; block has some solidity
 	andi.w	#$F,d1	; x_pos (mod 16)
 	add.w	d0,d1	; d0 = 16*blockID -> offset in ColArray to look up
 	lea	(ColArray).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColArrayS1).l,a2
++
 	move.b	(a2,d1.w),d0	; heigth from ColArray
 	ext.w	d0
 	eor.w	d6,d4
@@ -40208,6 +40383,10 @@ loc_1E898:
 	andi.w	#$FF,d0
 	beq.s	loc_1E88A
 	lea	(ColCurveMap).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColCurveMapS1).l,a2
++
 	move.b	(a2,d0.w),(a4)
 	lsl.w	#4,d0
 	move.w	d3,d1
@@ -40225,6 +40404,10 @@ loc_1E898:
 	andi.w	#$F,d1
 	add.w	d0,d1
 	lea	(ColArray).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColArrayS1).l,a2
++
 	move.b	(a2,d1.w),d0
 	ext.w	d0
 	eor.w	d6,d4
@@ -40284,6 +40467,10 @@ loc_1E928:
 	andi.w	#$FF,d0
 	beq.s	loc_1E922
 	lea	(ColCurveMap).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColCurveMapS1).l,a2
++
 	move.b	(a2,d0.w),(a4)
 	lsl.w	#4,d0
 	move.w	d3,d1
@@ -40301,6 +40488,10 @@ loc_1E928:
 	andi.w	#$F,d1
 	add.w	d0,d1
 	lea	(ColArray).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColArrayS1).l,a2
++
 	move.b	(a2,d1.w),d0
 	ext.w	d0
 	eor.w	d6,d4
@@ -40372,6 +40563,10 @@ loc_1E9D0:
 	andi.w	#$FF,d0	; relevant collisionArrayEntry
 	beq.s	loc_1E9C2
 	lea	(ColCurveMap).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColCurveMapS1).l,a2
++
 	move.b	(a2,d0.w),(a4)
 	lsl.w	#4,d0	; offset in collision array
 	move.w	d2,d1	; y
@@ -40389,6 +40584,10 @@ loc_1E9D0:
 	andi.w	#$F,d1	; y
 	add.w	d0,d1	; line to look up
 	lea	(ColArray2).l,a2	; rotated collision array
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColArray2S1).l,a2
++
 	move.b	(a2,d1.w),d0	; collision value
 	ext.w	d0
 	eor.w	d6,d4	; set x-flip flag if from the right
@@ -40460,6 +40659,10 @@ loc_1EA78:
 	andi.w	#$FF,d0
 	beq.s	loc_1EA6A
 	lea	(ColCurveMap).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColCurveMapS1).l,a2
++
 	move.b	(a2,d0.w),(a4)
 	lsl.w	#4,d0
 	move.w	d2,d1
@@ -40477,6 +40680,10 @@ loc_1EA78:
 	andi.w	#$F,d1
 	add.w	d0,d1
 	lea	(ColArray2).l,a2
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColArray2S1).l,a2
++
 	move.b	(a2,d1.w),d0
 	ext.w	d0
 	eor.w	d6,d4
@@ -40522,6 +40729,11 @@ ConvertCollisionArray:
 ; ---------------------------------------------------------------------------
 	lea	(ColArray).l,a1	; Source location of 'raw' collision array
 	lea	(ColArray).l,a2	; Destinatation of converted collision array (overwrites the original)
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColArrayS1).l,a1
+	lea (ColArrayS1).l,a2
++
 
 	move.w	#$100-1,d3	; Number of blocks in collision array
 .blockLoop:
@@ -40551,12 +40763,22 @@ ConvertCollisionArray:
 
 	lea	(ColArray).l,a1
 	lea	(ColArray2).l,a2	; Write converted collision array to location of rotated collison array
-	bsr.s	.convertArrayToStandardFormat
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColArrayS1).l,a1
+	lea (ColArray2S1).l,a2
++
+	bsr.s	convertArrayToStandardFormat
 	lea	(ColArray).l,a1
 	lea	(ColArray).l,a2		; Write converted collision array to location of normal collison array
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	lea	(ColArrayS1).l,a1
+	lea	(ColArrayS1).l,a2
++
 
 ; loc_1EB46: FloorLog_Unk2:
-.convertArrayToStandardFormat:
+convertArrayToStandardFormat:
 	move.w	#$1000-1,d3	; Size of the collision array
 
 .processCollisionArrayLoop:
@@ -82620,6 +82842,13 @@ PLC_DYNANM: zoneOrderedOffsetTable 2,2		; Zone ID
 
 	zoneOffsetTableEntry.w Dynamic_Null	; $10
 	zoneOffsetTableEntry.w Animated_Null
+
+	zoneOffsetTableEntry.w Dynamic_Null	; $11
+	zoneOffsetTableEntry.w Animated_Null
+
+	zoneOffsetTableEntry.w Dynamic_Null	; $12
+	zoneOffsetTableEntry.w Animated_Null
+
     zoneTableEnd
 ; ===========================================================================
 
@@ -83335,6 +83564,8 @@ AnimPatMaps: zoneOrderedOffsetTable 2,1
 	zoneOffsetTableEntry.w APM_DEZ		; $E
 	zoneOffsetTableEntry.w APM_ARZ		; $F
 	zoneOffsetTableEntry.w APM_Null		;$10
+	zoneOffsetTableEntry.w APM_Null		;$11
+	zoneOffsetTableEntry.w APM_Null		;$12
     zoneTableEnd
 
 begin_animpat macro {INTLABEL}
@@ -85287,6 +85518,9 @@ JmpTbl_DbgObjLists: zoneOrderedOffsetTable 2,1
 	zoneOffsetTableEntry.w DbgObjList_Def	; $E
 	zoneOffsetTableEntry.w DbgObjList_ARZ	; $F
 	zoneOffsetTableEntry.w DbgObjList_SCZ	; $10
+	zoneOffsetTableEntry.w DbgObjList_Def	; $11
+	zoneOffsetTableEntry.w DbgObjList_Def	; $12
+
     zoneTableEnd
 
 ; macro for a debug object list header
@@ -85675,6 +85909,8 @@ LevelArtPointers:
 	levartptrs PLCID_Dez1,     PLCID_Dez2,      PalID_DEZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ;  $E ; DEZ  ; DEATH EGG ZONE
 	levartptrs PLCID_Arz1,     PLCID_Arz2,      PalID_ARZ,  ArtKos_ARZ, BM16_ARZ, BM128_ARZ ;  $F ; ARZ  ; AQUATIC RUIN ZONE
 	levartptrs PLCID_Scz1,     PLCID_Scz2,      PalID_SCZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $10 ; SCZ  ; SKY CHASE ZONE
+	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $11 ; GHZ  ; GREEN HILL ZONE ACTS 1 & 2
+	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $11 ; GHZ3 ; GREEN HILL ZONE ACT 3
 
     if (cur_zone_id<>no_of_zones)&&(MOMPASS=1)
 	message "Warning: Table LevelArtPointers has \{cur_zone_id/1.0} entries, but it should have \{no_of_zones/1.0} entries"
@@ -86738,11 +86974,16 @@ PlrList_ResultsTails_Dup_End
 ;---------------------------------------------------------------------------------------
 ColCurveMap:	BINCLUDE	"collision/Curve and resistance mapping.bin"
 	even
+ColCurveMapS1:	BINCLUDE	"collision/Curve and resistance mapping S1.bin"
+	even
 ;--------------------------------------------------------------------------------------
 ; Collision arrays
 ;--------------------------------------------------------------------------------------
 ColArray:	BINCLUDE	"collision/Collision array 1.bin"
 ColArray2:	BINCLUDE	"collision/Collision array 2.bin"
+	even
+ColArrayS1:	 BINCLUDE	"collision/Collision array S1 1.bin"
+ColArray2S1: BINCLUDE	"collision/Collision array S1 2.bin"
 	even
 ;---------------------------------------------------------------------------------------
 ; EHZ and HTZ primary 16x16 collision index (Kosinski compression)
@@ -86805,6 +87046,14 @@ ColP_WFZSCZ:	BINCLUDE	"collision/WFZ and SCZ primary 16x16 collision index.bin"
 ColS_WFZSCZ:	BINCLUDE	"collision/WFZ and SCZ secondary 16x16 collision index.bin"
 	even
 ;---------------------------------------------------------------------------------------
+; GHZ secondary 16x16 collision index (Kosinski compression)
+ColP_GHZ:	BINCLUDE	"collision/GHZ primary 16x16 collision index.bin"
+	even
+;---------------------------------------------------------------------------------------
+; GHZ primary 16x16 collision index (Kosinski compression)
+ColS_GHZ:	BINCLUDE	"collision/GHZ secondary 16x16 collision index.bin"
+	even
+;---------------------------------------------------------------------------------------
 
 ColP_Invalid:
 
@@ -86851,6 +87100,10 @@ Off_Level: zoneOrderedOffsetTable 2,2
 	zoneOffsetTableEntry.w Level_ARZ2	; 31
 	zoneOffsetTableEntry.w Level_SCZ	; 32
 	zoneOffsetTableEntry.w Level_SCZ	; 33
+	zoneOffsetTableEntry.w Level_GHZ1	; 34
+	zoneOffsetTableEntry.w Level_GHZ2	; 35
+	zoneOffsetTableEntry.w Level_GHZ3	; 36
+	zoneOffsetTableEntry.w Level_EHZ1	; 37
     zoneTableEnd
 ;---------------------------------------------------------------------------------------
 ; EHZ act 1 level layout (Kosinski compression)
@@ -86936,6 +87189,18 @@ Level_ARZ2:	BINCLUDE	"level/layout/ARZ_2.bin"
 ;---------------------------------------------------------------------------------------
 ; SCZ level layout (Kosinski compression)
 Level_SCZ:	BINCLUDE	"level/layout/SCZ.bin"
+	even
+;---------------------------------------------------------------------------------------
+; GHZ act 1 level layout (Kosinski compression)
+Level_GHZ1:	BINCLUDE	"level/layout/GHZ_1.bin"
+	even
+;---------------------------------------------------------------------------------------
+; GHZ act 2 level layout (Kosinski compression)
+Level_GHZ2:	BINCLUDE	"level/layout/GHZ_2.bin"
+	even
+;---------------------------------------------------------------------------------------
+; GHZ act 3 level layout (Kosinski compression)
+Level_GHZ3:	BINCLUDE	"level/layout/GHZ_3.bin"
 	even
 
 
@@ -88118,9 +88383,16 @@ BM128_ARZ:	BINCLUDE	"mappings/128x128/ARZ.bin"
 ; WFZ/SCZ 16x16 block mappings (Kosinski compression)
 BM16_WFZ:	BINCLUDE	"mappings/16x16/WFZ_SCZ.bin"
 ;-----------------------------------------------------------------------------------
+; GHZ 16x16 block mappings (Kosinski compression)
+BM16_GHZ:	BINCLUDE	"mappings/16x16/GHZ.bin"
+;-----------------------------------------------------------------------------------
 ; WFZ/SCZ main level patterns (Kosinski compression)
 ; ArtKoz_C5004:
 ArtKos_SCZ:	BINCLUDE	"art/kosinski/WFZ_SCZ.bin"
+;-----------------------------------------------------------------------------------
+; GHZ main level patterns (Kosinski compression)
+;
+ArtKos_GHZ:	BINCLUDE	"art/kosinski/GHZ.bin"
 ;-----------------------------------------------------------------------------------
 ; WFZ pattern suppliment to SCZ tiles (Kosinski compression)
 ; ArtKoz_C7EC4:
@@ -88128,6 +88400,9 @@ ArtKos_WFZ:	BINCLUDE	"art/kosinski/WFZ_Supp.bin"
 ;-----------------------------------------------------------------------------------
 ; WFZ/SCZ 128x128 block mappings (Kosinski compression)
 BM128_WFZ:	BINCLUDE	"mappings/128x128/WFZ_SCZ.bin"
+;-----------------------------------------------------------------------------------
+; GHZ 128x128 block mappings (Kosinski compression)
+BM128_GHZ:	BINCLUDE	"mappings/128x128/GHZ.bin"
 
 ; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ;-----------------------------------------------------------------------------------
@@ -88485,6 +88760,10 @@ Off_Rings: zoneOrderedOffsetTable 2,2
 	zoneOffsetTableEntry.w  Rings_ARZ_2	; 31
 	zoneOffsetTableEntry.w  Rings_SCZ_1	; 32 $10
 	zoneOffsetTableEntry.w  Rings_SCZ_2	; 33
+	zoneOffsetTableEntry.w  Rings_GHZ_1	; 34 $11
+	zoneOffsetTableEntry.w  Rings_GHZ_2	; 35
+	zoneOffsetTableEntry.w  Rings_GHZ_3	; 36 $12
+	zoneOffsetTableEntry.w  Rings_GHZ_3	; 37
     zoneTableEnd
 
 Rings_EHZ_1:	BINCLUDE	"level/rings/EHZ_1.bin"
@@ -88521,6 +88800,9 @@ Rings_ARZ_1:	BINCLUDE	"level/rings/ARZ_1.bin"
 Rings_ARZ_2:	BINCLUDE	"level/rings/ARZ_2.bin"
 Rings_SCZ_1:	BINCLUDE	"level/rings/SCZ_1.bin"
 Rings_SCZ_2:	BINCLUDE	"level/rings/SCZ_2.bin"
+Rings_GHZ_1:	BINCLUDE	"level/rings/GHZ_1.bin"
+Rings_GHZ_2:	BINCLUDE	"level/rings/GHZ_2.bin"
+Rings_GHZ_3:	BINCLUDE	"level/rings/GHZ_3.bin"
 
 ; --------------------------------------------------------------------------------------
 ; Filler (free space) (unnecessary; could be replaced with "even")
@@ -88565,6 +88847,10 @@ Off_Objects: zoneOrderedOffsetTable 2,2
 	zoneOffsetTableEntry.w  Objects_ARZ_2	; 31
 	zoneOffsetTableEntry.w  Objects_SCZ_1	; 32 $10
 	zoneOffsetTableEntry.w  Objects_SCZ_2	; 33
+	zoneOffsetTableEntry.w  Objects_GHZ_1	; 34 $11
+	zoneOffsetTableEntry.w  Objects_GHZ_2	; 35
+	zoneOffsetTableEntry.w  Objects_GHZ_3	; 36 $12
+	zoneOffsetTableEntry.w  Objects_Null	; 37
     zoneTableEnd
 
 	; These things act as boundaries for the object layout parser, so it doesn't read past the end/beginning of the file
@@ -88643,6 +88929,12 @@ Objects_ARZ_2:	BINCLUDE	"level/objects/ARZ_2.bin"
 Objects_SCZ_1:	BINCLUDE	"level/objects/SCZ_1.bin"
 	ObjectLayoutBoundary
 Objects_SCZ_2:	BINCLUDE	"level/objects/SCZ_2.bin"
+	ObjectLayoutBoundary
+Objects_GHZ_1:	BINCLUDE	"level/objects/GHZ_1.bin"
+	ObjectLayoutBoundary
+Objects_GHZ_2:	BINCLUDE	"level/objects/GHZ_2.bin"
+	ObjectLayoutBoundary
+Objects_GHZ_3:	BINCLUDE	"level/objects/GHZ_3.bin"
 	ObjectLayoutBoundary
 Objects_Null:
 	ObjectLayoutBoundary
