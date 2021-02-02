@@ -27911,7 +27911,9 @@ ObjPtr_ContinueText:
 ObjPtr_ContinueIcons:	dc.l ObjDA	; Continue text
 ObjPtr_ContinueChars:	dc.l ObjDB	; Sonic lying down or Tails nagging (continue screen)
 ObjPtr_RingPrize:	dc.l ObjDC	; Ring prize from Casino Night Zone
-ObjPtr_Motobug:		dc.l ObjDD	; Motobug - Green Hill Zone
+ObjPtr_Motobug:		dc.l ObjDD	; Moto Bug (GHZ)
+ObjPtr_Buzzbomber:	dc.l ObjDE	; Buzz Bomber (GHZ, MZ, SYZ)
+ObjPtr_Buzzmissile:	dc.l ObjDF	; Buzz Bomber Misiile
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
 ; Object 4C, 4D, 4E, 4F, 62, D0, and D1
@@ -48609,6 +48611,11 @@ JmpTo23_Adjust2PArtPointer ; JmpTo
 ; ----------------------------------------------------------------------------
 ; Sprite_25694:
 Obj22:
+	; very lazy to change the id of objects (temporarily)
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.w	+
+	jmp	ObjDE ; in sonic 1 this is the buzz bomber object
++
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	Obj22_Index(pc,d0.w),d1
@@ -49374,6 +49381,11 @@ JmpTo7_CalcSine ; JmpTo
 ; ----------------------------------------------------------------------------
 ; Sprite_26370:
 Obj40:
+	; very lazy to change the id of objects (temporarily)
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.w	+
+	jmp	ObjDD ; in sonic 1 this is the moto bug object
++
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	Obj40_Index(pc,d0.w),d1
@@ -81858,6 +81870,8 @@ Obj3E_MapUnc_3F436:	BINCLUDE "mappings/sprite/obj3E.bin"
 ; ----------------------------------------------------------------------------
 
 		include "objects/Object DD - Moto Bug enemy (GHZ).asm"
+		include "objects/Object DE - Buzz Bomber enemy.asm"
+		include "objects/Object DF - Buzz Bomber missile.asm"
 
 ; ===========================================================================
 
@@ -86443,10 +86457,8 @@ PlrList_Scz2_End
 ; Green Hill Zone primary
 ;---------------------------------------------------------------------------------------
 PlrList_Ghz1: plrlistheader
-	plreq ArtTile_ArtNem_Waterfall, ArtNem_Waterfall
 	plreq ArtTile_ArtNem_EHZ_Bridge, ArtNem_EHZ_Bridge
-	plreq ArtTile_ArtNem_Buzzer_Fireball, ArtNem_HtzFireball1
-	plreq ArtTile_ArtNem_Buzzer, ArtNem_Buzzer
+	plreq ArtTile_ArtNem_BuzzBomber, ArtNem_BuzzBomber
 	plreq ArtTile_ArtNem_Motobug, ArtNem_Motobug
 	plreq ArtTile_ArtNem_GHZ_Purple_Rock, ArtNem_GHZ_Purple_Rock
 PlrList_Ghz1_End
@@ -89149,10 +89161,16 @@ ArtNem_VinePulley:	BINCLUDE	"art/nemesis/Vine that lowers from MCZ.bin"
 	even
 ArtNem_MCZGateLog:	BINCLUDE	"art/nemesis/Drawbridge logs from MCZ.bin"
 ; --------------------------------------------------------------------
-; Nemesis compressed art
+; Nemesis compressed art (18 blocks)
 ; Purple rock in Green Hill Zone
 	even
 ArtNem_GHZ_Purple_Rock:	BINCLUDE "art/nemesis/GHZ Purple Rock.bin"
+; --------------------------------------------------------------------
+; Nemesis compressed art (37 blocks)
+; Buzz Bomber in GHZ, MZ and SYZ
+	even
+ArtNem_BuzzBomber:	BINCLUDE "art/nemesis/Buzz Bomber Enemy.bin"
+; --------------------------------------------------------------------
 	even
 ; MM: sound driver stuff
 ; ---------------------------------------------------------------------------

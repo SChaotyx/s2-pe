@@ -717,6 +717,8 @@ ObjID_ContinueIcons =		id(ObjPtr_ContinueIcons)	; DA
 ObjID_ContinueChars =		id(ObjPtr_ContinueChars)	; DB
 ObjID_RingPrize =		id(ObjPtr_RingPrize)		; DC
 ObjID_Motobug =			id(ObjPtr_Motobug)			; DD
+ObjID_Buzzbomber =		id(ObjPtr_Buzzbomber)		; DE
+ObjID_Buzzmissile =		id(ObjPtr_Buzzmissile)		; DF
 
 	include "musicids.gen.asm"
 
@@ -1994,6 +1996,7 @@ ArtTile_ArtUnc_GHZFlowers2            = $0352 ; Small Flowers
 ArtTile_ArtUnc_GHZWaterFall           = $035E ; Water Fall
 ArtTile_ArtNem_Motobug				  = $0366 ; Moto Bug
 ArtTile_ArtNem_GHZ_Purple_Rock        = $0383 ; Purple Rock
+ArtTile_ArtNem_BuzzBomber			  = $0500
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C
@@ -2338,12 +2341,15 @@ v_pcyc_num:				equ PalCycle_Frame
 v_pal_dry:				equ Normal_palette
 v_objstate:				equ Obj_respawn_data
 
+v_player:				equ MainCharacter
 
 obMap:					equ mappings
 obGfx:					equ art_tile
 obRender:				equ render_flags
 obPriority:				equ priority
 obActWid:				equ width_pixels
+obTimeFrame:			equ anim_frame_duration
+obFrame:				equ anim_frame
 obAnim:					equ anim
 obHeight:				equ y_radius
 obWidth:				equ x_radius
@@ -2356,6 +2362,7 @@ ob2ndRout:				equ routine_secondary
 obStatus:				equ status
 obColType:				equ collision_flags
 obRespawnNo:			equ respawn_index
+obSubtype:				equ subtype
 ; ---------------------------------------------------------------------------
 ; Sonic 1 equivalent subroutines
 ; ---------------------------------------------------------------------------
