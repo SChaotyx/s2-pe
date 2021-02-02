@@ -1991,8 +1991,9 @@ ArtTile_ArtNem_Balkrie                = $0565
 ; GHZ
 ArtTile_ArtUnc_GHZFlowers1            = $0342 ; Big Flowers
 ArtTile_ArtUnc_GHZFlowers2            = $0352 ; Small Flowers
-ArtTile_ArtUnc_GHZWaterFall           = $035E ; Small Flowers
-ArtTile_ArtNem_Motobug				  = $0366
+ArtTile_ArtUnc_GHZWaterFall           = $035E ; Water Fall
+ArtTile_ArtNem_Motobug				  = $0366 ; Moto Bug
+ArtTile_ArtNem_GHZ_Purple_Rock        = $0383 ; Purple Rock
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C
@@ -2292,7 +2293,6 @@ ArtTile_ArtNem_FloatPlatform          = $0418
 ArtTile_ArtNem_BigRing_Flash          = $0462
 ArtTile_ArtNem_EndPoints              = $04B6
 ArtTile_ArtNem_BreakWall              = $0590
-ArtTile_ArtNem_GHZ_Purple_Rock        = $06C0
 
 ; ---------------------------------------------------------------------------
 ; Sonic 1 equivalent constants

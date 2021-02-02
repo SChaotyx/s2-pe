@@ -86448,6 +86448,7 @@ PlrList_Ghz1: plrlistheader
 	plreq ArtTile_ArtNem_Buzzer_Fireball, ArtNem_HtzFireball1
 	plreq ArtTile_ArtNem_Buzzer, ArtNem_Buzzer
 	plreq ArtTile_ArtNem_Motobug, ArtNem_Motobug
+	plreq ArtTile_ArtNem_GHZ_Purple_Rock, ArtNem_GHZ_Purple_Rock
 PlrList_Ghz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -89147,8 +89148,11 @@ ArtNem_VinePulley:	BINCLUDE	"art/nemesis/Vine that lowers from MCZ.bin"
 ; Log viewed from the end for folding gates in MCZ (start of MCZ2)	; ArtNem_F1E06:
 	even
 ArtNem_MCZGateLog:	BINCLUDE	"art/nemesis/Drawbridge logs from MCZ.bin"
-
-
+; --------------------------------------------------------------------
+; Nemesis compressed art
+; Purple rock in Green Hill Zone
+	even
+ArtNem_GHZ_Purple_Rock:	BINCLUDE "art/nemesis/GHZ Purple Rock.bin"
 	even
 ; MM: sound driver stuff
 ; ---------------------------------------------------------------------------
