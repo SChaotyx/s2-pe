@@ -51,7 +51,7 @@ Msl_Animate:	; Routine 2
 
 Msl_ChkCancel:
 		movea.l	msl_parent(a0),a1
-		cmpi.b	#ObjID_Explosion,0(a1) ; has Buzz Bomber been destroyed?
+		cmpi.b	#ObjID_Explosion,(a1) ; has Buzz Bomber been destroyed?
 		beq.s	Msl_Delete	; if yes, branch
 		rts	
 ; End of function Msl_ChkCancel
@@ -73,8 +73,7 @@ Msl_FromBuzz:	; Routine 4
 ; ===========================================================================
 
 Msl_Delete:	; Routine 6
-		jsr	DeleteObject
-		rts	
+		jmp	DeleteObject	
 ; ===========================================================================
 
 Msl_FromNewt:	; Routine 8
@@ -88,12 +87,16 @@ Msl_Animate2:
 		jsr	DisplaySprite
 		rts	
 
+; ---------------------------------------------------------------------------
+; Sprite Mappings
+; ---------------------------------------------------------------------------
 Map_Missile:	BINCLUDE	"mappings/sprite/objDF_buzz_bomber_missile.bin"
+
 ; ---------------------------------------------------------------------------
 ; Animation script - missile that Buzz Bomber throws
 ; ---------------------------------------------------------------------------
 Ani_Missile:	dc.w animslflare-Ani_Missile
-		dc.w animslmissile-Ani_Missile
+				dc.w animslmissile-Ani_Missile
 animslflare:		dc.b 7,	0, 1, afRoutine
-animslmissile:	dc.b 1,	2, 3, afEnd
+animslmissile:		dc.b 1,	2, 3, afEnd
 		even

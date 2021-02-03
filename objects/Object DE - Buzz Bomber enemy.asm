@@ -35,8 +35,6 @@ Buzz_Action:	; Routine 2
 		lea	(Ani_Buzz).l,a1
 		jsr	AnimateSprite
         jmp	DisplaySprite
-        rts
-		;bra.w	RememberState
 ; ===========================================================================
 index:		dc.w bbmove-index
 		dc.w chknearsonic-index

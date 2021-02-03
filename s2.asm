@@ -27898,7 +27898,7 @@ ObjPtr_EndingSeqSonic:
 ObjPtr_EndingSeqTails:	dc.l ObjCE	; Sonic and Tails jumping off the plane from ending sequence
 ObjPtr_TornadoHelixes:	dc.l ObjCF	;"Plane's helixes" from ending sequence
 			dc.l ObjNull	; ObjD0
-			dc.l ObjNull	; ObjD1
+ObjPtr_WaterFallSFX		dc.l ObjD1	; WaterFall SFX
 ObjPtr_CNZRectBlocks:	dc.l ObjD2	; Flashing blocks that appear and disappear in a rectangular shape that you can walk across, from CNZ
 ObjPtr_BombPrize:	dc.l ObjD3	; Bomb prize from CNZ
 ObjPtr_CNZBigBlock:	dc.l ObjD4	; Big block from CNZ that moves back and fourth
@@ -27914,9 +27914,10 @@ ObjPtr_RingPrize:	dc.l ObjDC	; Ring prize from Casino Night Zone
 ObjPtr_Motobug:		dc.l ObjDD	; Moto Bug (GHZ)
 ObjPtr_Buzzbomber:	dc.l ObjDE	; Buzz Bomber (GHZ, MZ, SYZ)
 ObjPtr_Buzzmissile:	dc.l ObjDF	; Buzz Bomber Misiile
+ObjPtr_Chopper:		dc.l ObjE0	; Chopper (GHZ)
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
-; Object 4C, 4D, 4E, 4F, 62, D0, and D1
+; Object 4C, 4D, 4E, 4F, 62 and D0
 
 ; Object removed from the game. All it does is deallocate its array.
 ; ----------------------------------------------------------------------------
@@ -48611,11 +48612,6 @@ JmpTo23_Adjust2PArtPointer ; JmpTo
 ; ----------------------------------------------------------------------------
 ; Sprite_25694:
 Obj22:
-	; very lazy to change the id of objects (temporarily)
-	cmpi.b	#green_hill_zone,(Current_Zone).w
-	blt.w	+
-	jmp	ObjDE ; in sonic 1 this is the buzz bomber object
-+
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	Obj22_Index(pc,d0.w),d1
@@ -49381,11 +49377,6 @@ JmpTo7_CalcSine ; JmpTo
 ; ----------------------------------------------------------------------------
 ; Sprite_26370:
 Obj40:
-	; very lazy to change the id of objects (temporarily)
-	cmpi.b	#green_hill_zone,(Current_Zone).w
-	blt.w	+
-	jmp	ObjDD ; in sonic 1 this is the moto bug object
-+
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	Obj40_Index(pc,d0.w),d1
@@ -81869,9 +81860,11 @@ Obj3E_MapUnc_3F436:	BINCLUDE "mappings/sprite/obj3E.bin"
 ; Objects Include
 ; ----------------------------------------------------------------------------
 
+		include "objects/Object D1 - Water Fall SFX.asm"
 		include "objects/Object DD - Moto Bug enemy (GHZ).asm"
 		include "objects/Object DE - Buzz Bomber enemy.asm"
 		include "objects/Object DF - Buzz Bomber missile.asm"
+		include "objects/Object E0 - Chopper.asm"
 
 ; ===========================================================================
 
@@ -86461,6 +86454,7 @@ PlrList_Ghz1: plrlistheader
 	plreq ArtTile_ArtNem_BuzzBomber, ArtNem_BuzzBomber
 	plreq ArtTile_ArtNem_Motobug, ArtNem_Motobug
 	plreq ArtTile_ArtNem_GHZ_Purple_Rock, ArtNem_GHZ_Purple_Rock
+	plreq ArtTile_ArtNem_Chopper, ArtNem_Chopper
 PlrList_Ghz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -89170,6 +89164,11 @@ ArtNem_GHZ_Purple_Rock:	BINCLUDE "art/nemesis/GHZ Purple Rock.bin"
 ; Buzz Bomber in GHZ, MZ and SYZ
 	even
 ArtNem_BuzzBomber:	BINCLUDE "art/nemesis/Buzz Bomber Enemy.bin"
+; --------------------------------------------------------------------
+; Nemesis compressed art (20 blocks)
+; Chopper in GHZ
+	even
+ArtNem_Chopper:	BINCLUDE "art/nemesis/Chopper Enemy.bin"
 ; --------------------------------------------------------------------
 	even
 ; MM: sound driver stuff

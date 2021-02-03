@@ -704,6 +704,7 @@ ObjID_EndingSeqBird =		id(ObjPtr_EndingSeqBird)	; CD
 ObjID_EndingSeqSonic =		id(ObjPtr_EndingSeqSonic)	; CE
 ObjID_EndingSeqTails =		id(ObjPtr_EndingSeqTails)	; CE
 ObjID_TornadoHelixes =		id(ObjPtr_TornadoHelixes)	; CF
+ObjID_WaterFallSFX =		id(ObjPtr_WaterFallSFX)		; D1
 ObjID_CNZRectBlocks =		id(ObjPtr_CNZRectBlocks)	; D2
 ObjID_BombPrize =		id(ObjPtr_BombPrize)		; D3
 ObjID_CNZBigBlock =		id(ObjPtr_CNZBigBlock)		; D4
@@ -719,6 +720,7 @@ ObjID_RingPrize =		id(ObjPtr_RingPrize)		; DC
 ObjID_Motobug =			id(ObjPtr_Motobug)			; DD
 ObjID_Buzzbomber =		id(ObjPtr_Buzzbomber)		; DE
 ObjID_Buzzmissile =		id(ObjPtr_Buzzmissile)		; DF
+ObjID_Chopper =			id(ObjPtr_Chopper)			; E0
 
 	include "musicids.gen.asm"
 
@@ -1996,7 +1998,8 @@ ArtTile_ArtUnc_GHZFlowers2            = $0352 ; Small Flowers
 ArtTile_ArtUnc_GHZWaterFall           = $035E ; Water Fall
 ArtTile_ArtNem_Motobug				  = $0366 ; Moto Bug
 ArtTile_ArtNem_GHZ_Purple_Rock        = $0383 ; Purple Rock
-ArtTile_ArtNem_BuzzBomber			  = $0500
+ArtTile_ArtNem_BuzzBomber			  = $0500 ; Buzz Bomber
+ArtTile_ArtNem_Chopper				  = $0537 ; Chopper
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C
@@ -2340,6 +2343,7 @@ v_pcyc_time:			equ PalCycle_Timer
 v_pcyc_num:				equ PalCycle_Frame
 v_pal_dry:				equ Normal_palette
 v_objstate:				equ Obj_respawn_data
+v_vbla_byte:			equ Vint_runcount
 
 v_player:				equ MainCharacter
 
