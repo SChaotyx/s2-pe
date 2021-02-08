@@ -26,7 +26,7 @@ gameRevision = 1
 padToPowerOfTwo = 1
 ;	| If 1, pads the end of the ROM to the next power of two bytes (for real hardware)
 ;
-allOptimizations = 0
+allOptimizations = 1
 ;	| If 1, enables all optimizations
 ;
 skipChecksumCheck = 0|allOptimizations
@@ -27915,6 +27915,7 @@ ObjPtr_Motobug:		dc.l ObjDD	; Moto Bug (GHZ)
 ObjPtr_Buzzbomber:	dc.l ObjDE	; Buzz Bomber (GHZ, MZ, SYZ)
 ObjPtr_Buzzmissile:	dc.l ObjDF	; Buzz Bomber Misiile
 ObjPtr_Chopper:		dc.l ObjE0	; Chopper (GHZ)
+ObjPtr_Crabmeat:	dc.l ObjE1  ; Crabmeat (GHZ, SYZ)
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
 ; Object 4C, 4D, 4E, 4F, 62 and D0
@@ -41121,6 +41122,7 @@ return_1EDF8:
 ObjFloorDist:
 ObjCheckFloorDist:
 	move.w	x_pos(a0),d3
+ObjFloorDist2:
 	move.w	y_pos(a0),d2
 	move.b	y_radius(a0),d0
 	ext.w	d0
@@ -81864,7 +81866,8 @@ Obj3E_MapUnc_3F436:	BINCLUDE "mappings/sprite/obj3E.bin"
 		include "objects/Object DD - Moto Bug enemy (GHZ).asm"
 		include "objects/Object DE - Buzz Bomber enemy.asm"
 		include "objects/Object DF - Buzz Bomber missile.asm"
-		include "objects/Object E0 - Chopper.asm"
+		include "objects/Object E0 - Chopper enemy.asm"
+		include "objects/Object E1 - Crabmeat enemy.asm"
 
 ; ===========================================================================
 
@@ -86455,6 +86458,7 @@ PlrList_Ghz1: plrlistheader
 	plreq ArtTile_ArtNem_Motobug, ArtNem_Motobug
 	plreq ArtTile_ArtNem_GHZ_Purple_Rock, ArtNem_GHZ_Purple_Rock
 	plreq ArtTile_ArtNem_Chopper, ArtNem_Chopper
+	plreq ArtTile_ArtNem_Crabmeat, ArtNem_Crabmeat
 PlrList_Ghz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -89169,6 +89173,11 @@ ArtNem_BuzzBomber:	BINCLUDE "art/nemesis/Buzz Bomber Enemy.bin"
 ; Chopper in GHZ
 	even
 ArtNem_Chopper:	BINCLUDE "art/nemesis/Chopper Enemy.bin"
+; --------------------------------------------------------------------
+; Nemesis compressed art (44 blocks)
+; Crabmeat in GHZ and SYZ
+	even
+ArtNem_Crabmeat: BINCLUDE "art/nemesis/Crabmeat Enemy.bin"
 ; --------------------------------------------------------------------
 	even
 ; MM: sound driver stuff

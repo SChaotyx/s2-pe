@@ -721,6 +721,7 @@ ObjID_Motobug =			id(ObjPtr_Motobug)			; DD
 ObjID_Buzzbomber =		id(ObjPtr_Buzzbomber)		; DE
 ObjID_Buzzmissile =		id(ObjPtr_Buzzmissile)		; DF
 ObjID_Chopper =			id(ObjPtr_Chopper)			; E0
+ObjID_Crabmeat =		id(ObjPtr_Crabmeat)			; E1
 
 	include "musicids.gen.asm"
 
@@ -2000,6 +2001,7 @@ ArtTile_ArtNem_Motobug				  = $0366 ; Moto Bug
 ArtTile_ArtNem_GHZ_Purple_Rock        = $0383 ; Purple Rock
 ArtTile_ArtNem_BuzzBomber			  = $0500 ; Buzz Bomber
 ArtTile_ArtNem_Chopper				  = $0537 ; Chopper
+ArtTile_ArtNem_Crabmeat				  = $0537+21 ; Crabmeat
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C
@@ -2367,6 +2369,7 @@ obStatus:				equ status
 obColType:				equ collision_flags
 obRespawnNo:			equ respawn_index
 obSubtype:				equ subtype
+obAngle:				equ angle
 ; ---------------------------------------------------------------------------
 ; Sonic 1 equivalent subroutines
 ; ---------------------------------------------------------------------------
