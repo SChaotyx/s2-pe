@@ -23,7 +23,7 @@ gameRevision = 1
 ;	| If 0, a REV00 ROM is built
 ;	| If 1, a REV01 ROM is built, which contains some fixes
 ;	| If 2, a (probable) REV02 ROM is built, which contains even more fixes
-padToPowerOfTwo = 1
+padToPowerOfTwo = 0
 ;	| If 1, pads the end of the ROM to the next power of two bytes (for real hardware)
 ;
 allOptimizations = 1
@@ -62,77 +62,81 @@ useFullWaterTables = 0
 	include "s2.macros.asm"
 
 ; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+; Error Debugger
+	include "ErrorDebugger/Debugger.asm"
+
+; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ; start of ROM
 
 StartOfRom:
     if * <> 0
 	fatal "StartOfRom was $\{*} but it should be 0"
     endif
-Vectors:
-	dc.l System_Stack	; Initial stack pointer value
-	dc.l EntryPoint		; Start of program
-	dc.l ErrorTrap		; Bus error
-	dc.l ErrorTrap		; Address error (4)
-	dc.l ErrorTrap		; Illegal instruction
-	dc.l ErrorTrap		; Division by zero
-	dc.l ErrorTrap		; CHK exception
-	dc.l ErrorTrap		; TRAPV exception (8)
-	dc.l ErrorTrap		; Privilege violation
-	dc.l ErrorTrap		; TRACE exception
-	dc.l ErrorTrap		; Line-A emulator
-	dc.l ErrorTrap		; Line-F emulator (12)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved) (16)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved) (20)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved) (24)
-	dc.l ErrorTrap		; Spurious exception
-	dc.l ErrorTrap		; IRQ level 1
-	dc.l ErrorTrap		; IRQ level 2
-	dc.l ErrorTrap		; IRQ level 3 (28)
-	dc.l H_Int			; IRQ level 4 (horizontal retrace interrupt)
-	dc.l ErrorTrap		; IRQ level 5
-	dc.l V_Int			; IRQ level 6 (vertical retrace interrupt)
-	dc.l ErrorTrap		; IRQ level 7 (32)
-	dc.l ErrorTrap		; TRAP #00 exception
-	dc.l ErrorTrap		; TRAP #01 exception
-	dc.l ErrorTrap		; TRAP #02 exception
-	dc.l ErrorTrap		; TRAP #03 exception (36)
-	dc.l ErrorTrap		; TRAP #04 exception
-	dc.l ErrorTrap		; TRAP #05 exception
-	dc.l ErrorTrap		; TRAP #06 exception
-	dc.l ErrorTrap		; TRAP #07 exception (40)
-	dc.l ErrorTrap		; TRAP #08 exception
-	dc.l ErrorTrap		; TRAP #09 exception
-	dc.l ErrorTrap		; TRAP #10 exception
-	dc.l ErrorTrap		; TRAP #11 exception (44)
-	dc.l ErrorTrap		; TRAP #12 exception
-	dc.l ErrorTrap		; TRAP #13 exception
-	dc.l ErrorTrap		; TRAP #14 exception
-	dc.l ErrorTrap		; TRAP #15 exception (48)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved) (52)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved) (56)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved) (60)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved)
-	dc.l ErrorTrap		; Unused (reserved) (64)
+;Vectors:
+   dc.l System_Stack   ; Initial stack pointer value
+   dc.l EntryPoint       ; Start of program
+   dc.l BusError       ; Bus error
+   dc.l AddressError   ; Address error (4)
+   dc.l IllegalInstr   ; Illegal instruction
+   dc.l ZeroDivide       ; Division by zero
+   dc.l ChkInstr       ; CHK exception
+   dc.l TrapvInstr       ; TRAPV exception (8)
+   dc.l PrivilegeViol   ; Privilege violation
+   dc.l Trace           ; TRACE exception
+   dc.l Line1010Emu   ; Line-A emulator
+   dc.l Line1111Emu   ; Line-F emulator (12)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved) (16)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved) (20)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved) (24)
+   dc.l ErrorExcept   ; Spurious exception
+   dc.l ErrorExcept   ; IRQ level 1
+   dc.l ErrorExcept   ; IRQ level 2
+   dc.l ErrorExcept   ; IRQ level 3 (28)
+   dc.l H_Int           ; IRQ level 4 (horizontal retrace interrupt)
+   dc.l ErrorExcept   ; IRQ level 5
+   dc.l V_Int           ; IRQ level 6 (vertical retrace interrupt)
+   dc.l ErrorExcept   ; IRQ level 7 (32)
+   dc.l ErrorExcept   ; TRAP #00 exception
+   dc.l ErrorExcept   ; TRAP #01 exception
+   dc.l ErrorExcept   ; TRAP #02 exception
+   dc.l ErrorExcept   ; TRAP #03 exception (36)
+   dc.l ErrorExcept   ; TRAP #04 exception
+   dc.l ErrorExcept   ; TRAP #05 exception
+   dc.l ErrorExcept   ; TRAP #06 exception
+   dc.l ErrorExcept   ; TRAP #07 exception (40)
+   dc.l ErrorExcept   ; TRAP #08 exception
+   dc.l ErrorExcept   ; TRAP #09 exception
+   dc.l ErrorExcept   ; TRAP #10 exception
+   dc.l ErrorExcept   ; TRAP #11 exception (44)
+   dc.l ErrorExcept   ; TRAP #12 exception
+   dc.l ErrorExcept   ; TRAP #13 exception
+   dc.l ErrorExcept   ; TRAP #14 exception
+   dc.l ErrorExcept   ; TRAP #15 exception (48)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved) (52)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved) (56)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved) (60)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved)
+   dc.l ErrorExcept   ; Unused (reserved) (64)
 ; byte_100:
 Header:
 	dc.b "SEGA GENESIS    " ; Console name
@@ -89317,6 +89321,13 @@ DACSample	macro	pPtr,pDelay,pFlags
 ; loc_F1E8C:
 Snd_Sega:	BINCLUDE	"sound/PCM/SEGA.bin"
 Snd_Sega_End:
+
+; ==============================================================
+; --------------------------------------------------------------
+; Debugging modules
+; --------------------------------------------------------------
+	include	"ErrorDebugger/ErrorHandler.asm"
+; --------------------------------------------------------------
 
 ; end of 'ROM'
 	if padToPowerOfTwo && (*)&(*-1)

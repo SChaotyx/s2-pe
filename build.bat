@@ -84,19 +84,20 @@ IF EXIST s2built.bin "win32/fixpointer" s2.h s2built.bin   off_3A294 MapRUnc_Son
 REM REM // fix the rom header (checksum)
 IF EXIST s2built.bin "win32/fixheader" s2built.bin
 
-cd .Emu
-Emu.bat
 
 REM // if there were errors/warnings, a log file is produced
 IF EXIST s2.log goto LABLERROR4
 
 
 REM // done -- pause if we seem to have failed, then exit
-IF EXIST s2built.bin exit /b
+IF EXIST s2built.bin (
+   "ErrorDebugger/convsym" s2.lst s2built.bin -input as_lst -a
+)
 
-pause
+REM pause
 
-
+cd .Emu
+Emu.bat
 exit /b
 
 :LABLERROR1
