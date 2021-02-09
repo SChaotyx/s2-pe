@@ -51,7 +51,7 @@ Moto_Action:	; Routine 2
 		jsr	Moto_ActIndex(pc,d1.w)
 		lea	(Ani_Moto).l,a1
 		jsr	AnimateSprite
-		jmp	DisplaySprite
+		jmp MarkObjGone
 ; ===========================================================================
 Moto_ActIndex:	
 		dc.w move-Moto_ActIndex

@@ -34,7 +34,8 @@ Buzz_Action:	; Routine 2
 		jsr	index(pc,d1.w)
 		lea	(Ani_Buzz).l,a1
 		jsr	AnimateSprite
-        jmp	DisplaySprite
+		jmp	MarkObjGone
+
 ; ===========================================================================
 index:		dc.w bbmove-index
 		dc.w chknearsonic-index

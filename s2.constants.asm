@@ -2001,7 +2001,7 @@ ArtTile_ArtNem_Motobug				  = $0366 ; Moto Bug
 ArtTile_ArtNem_GHZ_Purple_Rock        = $0383 ; Purple Rock
 ArtTile_ArtNem_BuzzBomber			  = $0500 ; Buzz Bomber
 ArtTile_ArtNem_Chopper				  = $0537 ; Chopper
-ArtTile_ArtNem_Crabmeat				  = $0537+21 ; Crabmeat
+ArtTile_ArtNem_Crabmeat				  = $03BE ; Crabmeat
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C

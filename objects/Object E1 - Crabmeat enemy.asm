@@ -54,8 +54,7 @@ Crab_Action:	; Routine 2
 		jsr	ObjE1_index(pc,d1.w)
 		lea	(Ani_Crab).l,a1
 		jsr	AnimateSprite
-		jmp	DisplaySprite
-		;bra.w	RememberState
+		jmp MarkObjGone
 ; ===========================================================================
 ObjE1_index:		dc.w ObjE1_waittofire-ObjE1_index
 		dc.w ObjE1_walkonfloor-ObjE1_index
@@ -233,13 +232,13 @@ ObjE1Ani_stand:		dc.b $F, 0, afEnd
 		even
 ObjE1Ani_standslope:	dc.b $F, 2, afEnd
 		even
-ObjE1Ani_standsloperev:	dc.b $F, $22, afEnd
+ObjE1Ani_standsloperev:	dc.b $F, 8, afEnd
 		even
-ObjE1Ani_walk:		dc.b $F, 1, $21, 0, afEnd
+ObjE1Ani_walk:		dc.b $F, 1, 7, 0, afEnd
 		even
-ObjE1Ani_walkslope:	dc.b $F, $21, 3, 2, afEnd
+ObjE1Ani_walkslope:	dc.b $F, 7, 3, 2, afEnd
 		even
-ObjE1Ani_walksloperev:	dc.b $F, 1, $23, $22, afEnd
+ObjE1Ani_walksloperev:	dc.b $F, 1, 9, 8, afEnd
 		even
 ObjE1Ani_firing:	dc.b $F, 4, afEnd
 		even

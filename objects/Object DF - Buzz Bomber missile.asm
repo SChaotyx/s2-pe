@@ -37,7 +37,9 @@ Msl_Main:	; Routine 0
 ; ===========================================================================
 
 Msl_Animate:	; Routine 2
-		bsr.s	Msl_ChkCancel
+		movea.l	msl_parent(a0),a1
+		cmpi.b	#ObjID_Explosion,(a1) ; has Buzz Bomber been destroyed?
+		beq.s	Msl_Delete	; if yes, branch
 		lea	(Ani_Missile).l,a1
 		jsr	AnimateSprite
 		jmp	DisplaySprite

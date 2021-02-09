@@ -7,7 +7,7 @@ ObjE0:
 		move.b	obRoutine(a0),d0
 		move.w	Chop_Index(pc,d0.w),d1
 		jsr	Chop_Index(pc,d1.w)
-		jmp DisplaySprite
+		jmp MarkObjGone
 		rts
 ; ===========================================================================
 Chop_Index:	dc.w Chop_Main-Chop_Index
