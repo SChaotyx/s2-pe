@@ -722,6 +722,7 @@ ObjID_Buzzbomber =		id(ObjPtr_Buzzbomber)		; DE
 ObjID_Buzzmissile =		id(ObjPtr_Buzzmissile)		; DF
 ObjID_Chopper =			id(ObjPtr_Chopper)			; E0
 ObjID_Crabmeat =		id(ObjPtr_Crabmeat)			; E1
+ObjID_Newtron =			id(ObjPtr_Newtron)			; E2
 
 	include "musicids.gen.asm"
 
@@ -1999,9 +2000,11 @@ ArtTile_ArtUnc_GHZFlowers2            = $0352 ; Small Flowers
 ArtTile_ArtUnc_GHZWaterFall           = $035E ; Water Fall
 ArtTile_ArtNem_Motobug				  = $0366 ; Moto Bug
 ArtTile_ArtNem_GHZ_Purple_Rock        = $0383 ; Purple Rock
+ArtTile_ArtNem_Crabmeat				  = $039B ; Crabmeat
+ArtTile_ArtNem_Newtron				  = $03DF ; Newtron
 ArtTile_ArtNem_BuzzBomber			  = $0500 ; Buzz Bomber
 ArtTile_ArtNem_Chopper				  = $0537 ; Chopper
-ArtTile_ArtNem_Crabmeat				  = $03BE ; Crabmeat
+ArtTile_ArtNem_GHZ_Bridge             = $0557
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C

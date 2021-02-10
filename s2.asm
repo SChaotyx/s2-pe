@@ -20148,6 +20148,10 @@ Obj11_Init:
 	addq.b	#2,routine(a0)
 	move.l	#Obj11_MapUnc_FC70,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtNem_EHZ_Bridge,2,0),art_tile(a0)
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	blt.s	+
+	move.w	#make_art_tile(ArtTile_ArtNem_GHZ_Bridge,2,0),art_tile(a0)
++
 	move.b	#3,priority(a0)
 	cmpi.b	#hidden_palace_zone,(Current_Zone).w	; is this an HPZ bridge?
 	bne.s	+			; if not, branch
@@ -22128,27 +22132,28 @@ objsubdecl macro frame, mapaddr,artaddr,width,priority
 
 ; dword_111E6:
 Obj1C_InitData:
-	objsubdecl 0, Obj1C_MapUnc_11552, make_art_tile(ArtTile_ArtNem_BoltEnd_Rope,2,0), 4, 6
-	objsubdecl 1, Obj1C_MapUnc_11552, make_art_tile(ArtTile_ArtNem_BoltEnd_Rope,2,0), 4, 6
-	objsubdecl 1, Obj11_MapUnc_FC70,  make_art_tile(ArtTile_ArtNem_EHZ_Bridge,2,0), 4, 1
-	objsubdecl 2, Obj1C_MapUnc_11552, make_art_tile(ArtTile_ArtNem_BoltEnd_Rope,1,0), $10, 6
-	objsubdecl 3, Obj16_MapUnc_21F14, make_art_tile(ArtTile_ArtNem_HtzZipline,2,0), 8, 4
-	objsubdecl 4, Obj16_MapUnc_21F14, make_art_tile(ArtTile_ArtNem_HtzZipline,2,0), 8, 4
-	objsubdecl 1, Obj16_MapUnc_21F14, make_art_tile(ArtTile_ArtNem_HtzZipline,2,0), $20, 1
-	objsubdecl 0, Obj1C_MapUnc_113D6, make_art_tile(ArtTile_ArtKos_LevelArt,2,0), 8, 1
-	objsubdecl 1, Obj1C_MapUnc_113D6, make_art_tile(ArtTile_ArtKos_LevelArt,2,0), 8, 1
-	objsubdecl 0, Obj1C_MapUnc_113EE, make_art_tile(ArtTile_ArtUnc_Waterfall3,2,0), 4, 4
-	objsubdecl 0, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4
-	objsubdecl 1, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4
-	objsubdecl 2, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4
-	objsubdecl 3, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4
-	objsubdecl 4, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4
-	objsubdecl 5, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4
-	objsubdecl 0, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), $18, 4
-	objsubdecl 1, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), $18, 4
-	objsubdecl 2, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 8, 4
-	objsubdecl 3, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 8, 4
-	objsubdecl 4, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 8, 4
+	objsubdecl 0, Obj1C_MapUnc_11552, make_art_tile(ArtTile_ArtNem_BoltEnd_Rope,2,0), 4, 6		; 0
+	objsubdecl 1, Obj1C_MapUnc_11552, make_art_tile(ArtTile_ArtNem_BoltEnd_Rope,2,0), 4, 6		; 1
+	objsubdecl 1, Obj11_MapUnc_FC70,  make_art_tile(ArtTile_ArtNem_EHZ_Bridge,2,0), 4, 1		; 2
+	objsubdecl 2, Obj1C_MapUnc_11552, make_art_tile(ArtTile_ArtNem_BoltEnd_Rope,1,0), $10, 6	; 3
+	objsubdecl 3, Obj16_MapUnc_21F14, make_art_tile(ArtTile_ArtNem_HtzZipline,2,0), 8, 4		; 4
+	objsubdecl 4, Obj16_MapUnc_21F14, make_art_tile(ArtTile_ArtNem_HtzZipline,2,0), 8, 4		; 5
+	objsubdecl 1, Obj16_MapUnc_21F14, make_art_tile(ArtTile_ArtNem_HtzZipline,2,0), $20, 1		; 6
+	objsubdecl 0, Obj1C_MapUnc_113D6, make_art_tile(ArtTile_ArtKos_LevelArt,2,0), 8, 1			; 7
+	objsubdecl 1, Obj1C_MapUnc_113D6, make_art_tile(ArtTile_ArtKos_LevelArt,2,0), 8, 1			; 8
+	objsubdecl 0, Obj1C_MapUnc_113EE, make_art_tile(ArtTile_ArtUnc_Waterfall3,2,0), 4, 4		; 9
+	objsubdecl 0, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4			; $A
+	objsubdecl 1, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4			; $B
+	objsubdecl 2, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4			; $C
+	objsubdecl 3, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4			; $D
+	objsubdecl 4, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4			; $E
+	objsubdecl 5, Obj1C_MapUnc_11406, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 4, 4			; $F
+	objsubdecl 0, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), $18, 4		; $10
+	objsubdecl 1, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), $18, 4		; $11
+	objsubdecl 2, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 8, 4			; $12
+	objsubdecl 3, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 8, 4			; $13
+	objsubdecl 4, Obj1C_MapUnc_114AE, make_art_tile(ArtTile_ArtNem_Oilfall2,2,0), 8, 4			; $14
+	objsubdecl 1, Obj11_MapUnc_FC70,  make_art_tile(ArtTile_ArtNem_GHZ_Bridge,2,0), 4, 1		; $15
 ; byte_1128E:
 Obj1C_Radii:
 	dc.b   0
@@ -27920,6 +27925,7 @@ ObjPtr_Buzzbomber:	dc.l ObjDE	; Buzz Bomber (GHZ, MZ, SYZ)
 ObjPtr_Buzzmissile:	dc.l ObjDF	; Buzz Bomber Misiile
 ObjPtr_Chopper:		dc.l ObjE0	; Chopper (GHZ)
 ObjPtr_Crabmeat:	dc.l ObjE1  ; Crabmeat (GHZ, SYZ)
+ObjPtr_Newtron:		dc.l ObjE2	; Newtron (GHZ)
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
 ; Object 4C, 4D, 4E, 4F, 62 and D0
@@ -27992,6 +27998,7 @@ ObjectMove:
 ; ===========================================================================
 ; input: a0 = the object
 ; loc_163D2:
+RememberState:
 MarkObjGone:
 	tst.w	(Two_player_mode).w	; is it two player mode?
 	beq.s	+			; if not, branch
@@ -81872,6 +81879,7 @@ Obj3E_MapUnc_3F436:	BINCLUDE "mappings/sprite/obj3E.bin"
 		include "objects/Object DF - Buzz Bomber missile.asm"
 		include "objects/Object E0 - Chopper enemy.asm"
 		include "objects/Object E1 - Crabmeat enemy.asm"
+		include "objects/Object E2 - Newtron.asm"
 
 ; ===========================================================================
 
@@ -86457,12 +86465,13 @@ PlrList_Scz2_End
 ; Green Hill Zone primary
 ;---------------------------------------------------------------------------------------
 PlrList_Ghz1: plrlistheader
-	plreq ArtTile_ArtNem_EHZ_Bridge, ArtNem_EHZ_Bridge
+	plreq ArtTile_ArtNem_GHZ_Bridge, ArtNem_EHZ_Bridge
 	plreq ArtTile_ArtNem_BuzzBomber, ArtNem_BuzzBomber
 	plreq ArtTile_ArtNem_Motobug, ArtNem_Motobug
 	plreq ArtTile_ArtNem_GHZ_Purple_Rock, ArtNem_GHZ_Purple_Rock
 	plreq ArtTile_ArtNem_Chopper, ArtNem_Chopper
 	plreq ArtTile_ArtNem_Crabmeat, ArtNem_Crabmeat
+	plreq ArtTile_ArtNem_Newtron, ArtNem_Newtron
 PlrList_Ghz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -89182,6 +89191,11 @@ ArtNem_Chopper:	BINCLUDE "art/nemesis/Chopper Enemy.bin"
 ; Crabmeat in GHZ and SYZ
 	even
 ArtNem_Crabmeat: BINCLUDE "art/nemesis/Crabmeat Enemy.bin"
+; --------------------------------------------------------------------
+; Nemesis compressed art (44 blocks)
+; Newtron in GHZ
+	even
+ArtNem_Newtron: BINCLUDE "art/nemesis/Newtron Enemy.bin"
 ; --------------------------------------------------------------------
 	even
 ; MM: sound driver stuff
