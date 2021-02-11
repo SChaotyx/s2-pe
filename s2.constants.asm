@@ -2007,6 +2007,7 @@ ArtTile_ArtNem_BuzzBomber			  = $0500 ; Buzz Bomber
 ArtTile_ArtNem_Chopper				  = $0537 ; Chopper
 ArtTile_ArtNem_GHZ_Bridge             = $0557
 ArtTile_ArtNem_EdgeWall				  = $455F
+ArtTile_ArtNem_BreakWall              = $056C
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C
@@ -2305,7 +2306,6 @@ ArtTile_ArtNem_BigRing                = $0400
 ArtTile_ArtNem_FloatPlatform          = $0418
 ArtTile_ArtNem_BigRing_Flash          = $0462
 ArtTile_ArtNem_EndPoints              = $04B6
-ArtTile_ArtNem_BreakWall              = $0590
 
 ; ---------------------------------------------------------------------------
 ; Sonic 1 equivalent constants

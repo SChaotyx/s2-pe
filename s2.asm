@@ -27478,7 +27478,7 @@ Obj3C_Init:
 	addq.b	#2,routine(a0)
 	move.l	#Obj3C_MapUnc_15ECC,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtNem_BreakWall,2,0),art_tile(a0)
-	bsr.w	Adjust2PArtPointer
+	;bsr.w	Adjust2PArtPointer
 	move.b	#4,render_flags(a0)
 	move.b	#$10,width_pixels(a0)
 	move.b	#4,priority(a0)
@@ -86475,6 +86475,7 @@ PlrList_Ghz1: plrlistheader
 	plreq ArtTile_ArtNem_Crabmeat, ArtNem_Crabmeat
 	plreq ArtTile_ArtNem_Newtron, ArtNem_Newtron
 	plreq ArtTile_ArtNem_EdgeWall, ArtNem_EdgeWall
+	plreq ArtTile_ArtNem_BreakWall, ArtNem_BreakableWall
 PlrList_Ghz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -89204,6 +89205,11 @@ ArtNem_Newtron: BINCLUDE "art/nemesis/Newtron Enemy.bin"
 ; Edge Wall in GHZ
 	even
 ArtNem_EdgeWall: BINCLUDE "art/nemesis/GHZ Edge Wall.bin"
+; --------------------------------------------------------------------
+; Nemesis compressed art ($C blocks)
+; Breakable Wall in GHZ
+	even
+ArtNem_BreakableWall: BINCLUDE "art/nemesis/GHZ Breakable Wall.bin"
 ; --------------------------------------------------------------------
 	even
 ; MM: sound driver stuff
