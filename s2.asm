@@ -27926,6 +27926,7 @@ ObjPtr_Buzzmissile:	dc.l ObjDF	; Buzz Bomber Misiile
 ObjPtr_Chopper:		dc.l ObjE0	; Chopper (GHZ)
 ObjPtr_Crabmeat:	dc.l ObjE1  ; Crabmeat (GHZ, SYZ)
 ObjPtr_Newtron:		dc.l ObjE2	; Newtron (GHZ)
+ObjPtr_EdgeWall:	dc.l ObjE3	; Edge Wall (GHZ)
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
 ; Object 4C, 4D, 4E, 4F, 62 and D0
@@ -81880,6 +81881,7 @@ Obj3E_MapUnc_3F436:	BINCLUDE "mappings/sprite/obj3E.bin"
 		include "objects/Object E0 - Chopper enemy.asm"
 		include "objects/Object E1 - Crabmeat enemy.asm"
 		include "objects/Object E2 - Newtron.asm"
+		include "objects/Object E3 - Edge Wall.asm"
 
 ; ===========================================================================
 
@@ -86472,6 +86474,7 @@ PlrList_Ghz1: plrlistheader
 	plreq ArtTile_ArtNem_Chopper, ArtNem_Chopper
 	plreq ArtTile_ArtNem_Crabmeat, ArtNem_Crabmeat
 	plreq ArtTile_ArtNem_Newtron, ArtNem_Newtron
+	plreq ArtTile_ArtNem_EdgeWall, ArtNem_EdgeWall
 PlrList_Ghz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -89196,6 +89199,11 @@ ArtNem_Crabmeat: BINCLUDE "art/nemesis/Crabmeat Enemy.bin"
 ; Newtron in GHZ
 	even
 ArtNem_Newtron: BINCLUDE "art/nemesis/Newtron Enemy.bin"
+; --------------------------------------------------------------------
+; Nemesis compressed art (44 blocks)
+; Edge Wall in GHZ
+	even
+ArtNem_EdgeWall: BINCLUDE "art/nemesis/GHZ Edge Wall.bin"
 ; --------------------------------------------------------------------
 	even
 ; MM: sound driver stuff

@@ -723,6 +723,7 @@ ObjID_Buzzmissile =		id(ObjPtr_Buzzmissile)		; DF
 ObjID_Chopper =			id(ObjPtr_Chopper)			; E0
 ObjID_Crabmeat =		id(ObjPtr_Crabmeat)			; E1
 ObjID_Newtron =			id(ObjPtr_Newtron)			; E2
+ObjID_EdgeWall =		id(ObjPtr_EdgeWall)			; E3
 
 	include "musicids.gen.asm"
 
@@ -2005,6 +2006,7 @@ ArtTile_ArtNem_Newtron				  = $03DF ; Newtron
 ArtTile_ArtNem_BuzzBomber			  = $0500 ; Buzz Bomber
 ArtTile_ArtNem_Chopper				  = $0537 ; Chopper
 ArtTile_ArtNem_GHZ_Bridge             = $0557
+ArtTile_ArtNem_EdgeWall				  = $455F
 
 ; EHZ
 ArtTile_ArtUnc_EHZPulseBall           = $039C
@@ -2351,6 +2353,7 @@ v_objstate:				equ Obj_respawn_data
 v_vbla_byte:			equ Vint_runcount
 
 v_player:				equ MainCharacter
+v_debuguse:				equ Debug_placement_mode
 
 obMap:					equ mappings
 obGfx:					equ art_tile
@@ -2358,7 +2361,8 @@ obRender:				equ render_flags
 obPriority:				equ priority
 obActWid:				equ width_pixels
 obTimeFrame:			equ anim_frame_duration
-obFrame:				equ anim_frame
+obFrame:				equ mapping_frame
+obAniFrame:				equ anim_frame
 obAnim:					equ anim
 obHeight:				equ y_radius
 obWidth:				equ x_radius
@@ -2373,6 +2377,7 @@ obColType:				equ collision_flags
 obRespawnNo:			equ respawn_index
 obSubtype:				equ subtype
 obAngle:				equ angle
+obInertia:				equ inertia
 ; ---------------------------------------------------------------------------
 ; Sonic 1 equivalent subroutines
 ; ---------------------------------------------------------------------------
