@@ -4246,6 +4246,9 @@ Level:
 	moveq	#0,d0
 	move.w	d0,(Timer_frames).w
 	move.b	(Current_Zone).w,d0
+	add.b	d0,d0
+	move.b	(Current_Act).w,d1
+	add.b	d1,d0
 
 	; multiply d0 by 12, the size of a level art load block
 	add.w	d0,d0
@@ -5879,6 +5882,9 @@ Demo_ARZ:
 LoadZoneTiles:
 	moveq	#0,d0
 	move.b	(Current_Zone).w,d0
+	add.b	d0,d0
+	move.b	(Current_Act).w,d1
+	add.b	d1,d0
 	add.w	d0,d0
 	add.w	d0,d0
 	move.w	d0,d1
@@ -18277,6 +18283,9 @@ loc_E396:
 loadZoneBlockMaps:
 	moveq	#0,d0
 	move.b	(Current_Zone).w,d0
+	add.b	d0,d0
+	move.b	(Current_Act).w,d1
+	add.b	d1,d0
 	add.w	d0,d0
 	add.w	d0,d0
 	move.w	d0,d1
@@ -32056,7 +32065,7 @@ loc_19208:
 	tst.b	(Current_Act).w
 	beq.s	loc_1921E
 	; this is because the end of level signpost disappeared in acts 2
-	cmpi.w	#green_hill_zone,(Current_Zone).w
+	cmpi.b	#green_hill_zone,(Current_Zone).w
 	bge.s	loc_1921E
 	move.w	#0,x_pos(a0)
 	rts
@@ -85939,7 +85948,7 @@ cur_zone_str := "0"
 
 ; macro for declaring a "main level load block" (MLLB)
 levartptrs macro plc1,plc2,palette,art,map16x16,map128x128
-	!org LevelArtPointers+zone_id_{cur_zone_str}*12
+	!org LevelArtPointers+level_id_{cur_zone_str}*12
 	dc.l (plc1<<24)|art
 	dc.l (plc2<<24)|map16x16
 	dc.l (palette<<24)|map128x128
@@ -85949,29 +85958,48 @@ cur_zone_str := "\{cur_zone_id}"
 
 ; BEGIN SArt_Ptrs Art_Ptrs_Array[17]
 ; dword_42594: MainLoadBlocks: saArtPtrs:
-LevelArtPointers:
-	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_EHZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   0 ; EHZ  ; EMERALD HILL ZONE
-	levartptrs PLCID_Miles1up, PLCID_MilesLife, PalID_EHZ2, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   1 ; LEV1 ; LEVEL 1 (UNUSED)
-	levartptrs PLCID_Tails1up, PLCID_TailsLife, PalID_WZ,   ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   2 ; LEV2 ; LEVEL 2 (UNUSED)
-	levartptrs PLCID_Unused1,  PLCID_Unused2,   PalID_EHZ3, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   3 ; LEV3 ; LEVEL 3 (UNUSED)
-	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   4 ; MTZ  ; METROPOLIS ZONE ACTS 1 & 2
-	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   5 ; MTZ3 ; METROPOLIS ZONE ACT 3
-	levartptrs PLCID_Wfz1,     PLCID_Wfz2,      PalID_WFZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ;   6 ; WFZ  ; WING FORTRESS ZONE
-	levartptrs PLCID_Htz1,     PLCID_Htz2,      PalID_HTZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   7 ; HTZ  ; HILL TOP ZONE
-	levartptrs PLCID_Hpz1,     PLCID_Hpz2,      PalID_HPZ,  ArtKos_HPZ, BM16_HPZ, BM128_HPZ ;   8 ; HPZ  ; HIDDEN PALACE ZONE (UNUSED)
-	levartptrs PLCID_Unused3,  PLCID_Unused4,   PalID_EHZ4, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   9 ; LEV9 ; LEVEL 9 (UNUSED)
-	levartptrs PLCID_Ooz1,     PLCID_Ooz2,      PalID_OOZ,  ArtKos_OOZ, BM16_OOZ, BM128_OOZ ;  $A ; OOZ  ; OIL OCEAN ZONE
-	levartptrs PLCID_Mcz1,     PLCID_Mcz2,      PalID_MCZ,  ArtKos_MCZ, BM16_MCZ, BM128_MCZ ;  $B ; MCZ  ; MYSTIC CAVE ZONE
-	levartptrs PLCID_Cnz1,     PLCID_Cnz2,      PalID_CNZ,  ArtKos_CNZ, BM16_CNZ, BM128_CNZ ;  $C ; CNZ  ; CASINO NIGHT ZONE
-	levartptrs PLCID_Cpz1,     PLCID_Cpz2,      PalID_CPZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ;  $D ; CPZ  ; CHEMICAL PLANT ZONE
-	levartptrs PLCID_Dez1,     PLCID_Dez2,      PalID_DEZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ;  $E ; DEZ  ; DEATH EGG ZONE
-	levartptrs PLCID_Arz1,     PLCID_Arz2,      PalID_ARZ,  ArtKos_ARZ, BM16_ARZ, BM128_ARZ ;  $F ; ARZ  ; AQUATIC RUIN ZONE
-	levartptrs PLCID_Scz1,     PLCID_Scz2,      PalID_SCZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $10 ; SCZ  ; SKY CHASE ZONE
-	levartptrs PLCID_Ghz1,     PLCID_Ghz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $11 ; GHZ  ; GREEN HILL ZONE ACTS 1 & 2
-	levartptrs PLCID_Ghz1,     PLCID_Ghz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $11 ; GHZ3 ; GREEN HILL ZONE ACT 3
+LevelArtPointers:																			; ID ACT ZONE
+	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_EHZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $00; 0; $00; EMERALD HILL ZONE ACT 1
+	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_EHZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $01; 1;	 ; EMERALD HILL ZONE ACT 2
+	levartptrs PLCID_Miles1up, PLCID_MilesLife, PalID_EHZ2, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $02; 0; $01; LEVEL 1 ACT 1 (U)
+	levartptrs PLCID_Miles1up, PLCID_MilesLife, PalID_EHZ2, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $03; 1;	 ; LEVEL 1 ACT 2 (U)
+	levartptrs PLCID_Tails1up, PLCID_TailsLife, PalID_WZ,   ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $04; 0; $02; LEVEL 2 ACT 1 (U)
+	levartptrs PLCID_Tails1up, PLCID_TailsLife, PalID_WZ,   ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $05; 1;	 ; LEVEL 2 ACT 2 (U)
+	levartptrs PLCID_Unused1,  PLCID_Unused2,   PalID_EHZ3, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $06; 0; $03; LEVEL 3 ACT 1 (U)
+	levartptrs PLCID_Unused1,  PLCID_Unused2,   PalID_EHZ3, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $07; 1;	 ; LEVEL 3 ACT 2 (U)
+	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ; $08; 0; $04; METROPOLIS ZONE ACTS 1
+	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ; $09; 1;	 ; METROPOLIS ZONE ACTS 2
+	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ; $0A; 0; $05; METROPOLIS ZONE ACT 3
+	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ; $0B; 1;	 ; METROPOLIS ZONE ACT 4 (U)
+	levartptrs PLCID_Wfz1,     PLCID_Wfz2,      PalID_WFZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $0C; 0; $06; WING FORTRESS ZONE ACT 1
+	levartptrs PLCID_Wfz1,     PLCID_Wfz2,      PalID_WFZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $0D; 1;	 ; WING FORTRESS ZONE ACT 2 (U)
+	levartptrs PLCID_Htz1,     PLCID_Htz2,      PalID_HTZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $0E; 0; $07; HILL TOP ZONE ACT 1
+	levartptrs PLCID_Htz1,     PLCID_Htz2,      PalID_HTZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $0F; 1;	 ; HILL TOP ZONE ACT 2
+	levartptrs PLCID_Hpz1,     PLCID_Hpz2,      PalID_HPZ,  ArtKos_HPZ, BM16_HPZ, BM128_HPZ ; $10; 0; $08; HIDDEN PALACE ZONE ACT 1 (U)
+	levartptrs PLCID_Hpz1,     PLCID_Hpz2,      PalID_HPZ,  ArtKos_HPZ, BM16_HPZ, BM128_HPZ ; $11; 1;	 ; HIDDEN PALACE ZONE ACT 1 (U)
+	levartptrs PLCID_Unused3,  PLCID_Unused4,   PalID_EHZ4, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $12; 0; $09; LEVEL 9 ACT 1 (U)
+	levartptrs PLCID_Unused3,  PLCID_Unused4,   PalID_EHZ4, ArtKos_EHZ, BM16_EHZ, BM128_EHZ ; $13; 1;	 ; LEVEL 9 ACT 2 (U)
+	levartptrs PLCID_Ooz1,     PLCID_Ooz2,      PalID_OOZ,  ArtKos_OOZ, BM16_OOZ, BM128_OOZ ; $14; 0; $0A; OIL OCEAN ZONE ACT 1
+	levartptrs PLCID_Ooz1,     PLCID_Ooz2,      PalID_OOZ,  ArtKos_OOZ, BM16_OOZ, BM128_OOZ ; $15; 1;	 ; OIL OCEAN ZONE ACT 2
+	levartptrs PLCID_Mcz1,     PLCID_Mcz2,      PalID_MCZ,  ArtKos_MCZ, BM16_MCZ, BM128_MCZ ; $16; 0; $0B; MYSTIC CAVE ZONE ACT 1
+	levartptrs PLCID_Mcz1,     PLCID_Mcz2,      PalID_MCZ,  ArtKos_MCZ, BM16_MCZ, BM128_MCZ ; $17; 1;	 ; MYSTIC CAVE ZONE ACT 2
+	levartptrs PLCID_Cnz1,     PLCID_Cnz2,      PalID_CNZ,  ArtKos_CNZ, BM16_CNZ, BM128_CNZ ; $18; 0; $0C; CASINO NIGHT ZONE ACT 1
+	levartptrs PLCID_Cnz1,     PLCID_Cnz2,      PalID_CNZ,  ArtKos_CNZ, BM16_CNZ, BM128_CNZ ; $19; 1;	 ; CASINO NIGHT ZONE ACT 2
+	levartptrs PLCID_Cpz1,     PLCID_Cpz2,      PalID_CPZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ; $1A; 0; $0D; CHEMICAL PLANT ZONE ACT 1
+	levartptrs PLCID_Cpz1,     PLCID_Cpz2,      PalID_CPZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ; $1B; 1;	 ; CHEMICAL PLANT ZONE ACT 2
+	levartptrs PLCID_Dez1,     PLCID_Dez2,      PalID_DEZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ; $1C; 0; $0E; DEATH EGG ZONE ACT 1
+	levartptrs PLCID_Dez1,     PLCID_Dez2,      PalID_DEZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ; $1D; 1;	 ; DEATH EGG ZONE ACT 2 (U)
+	levartptrs PLCID_Arz1,     PLCID_Arz2,      PalID_ARZ,  ArtKos_ARZ, BM16_ARZ, BM128_ARZ ; $1E; 0; $0F; AQUATIC RUIN ZONE ACT 1
+	levartptrs PLCID_Arz1,     PLCID_Arz2,      PalID_ARZ,  ArtKos_ARZ, BM16_ARZ, BM128_ARZ ; $1F; 1;	 ; AQUATIC RUIN ZONE ACT 2
+	levartptrs PLCID_Scz1,     PLCID_Scz2,      PalID_SCZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $20; 0; $10; SKY CHASE ZONE ACT 1
+	levartptrs PLCID_Scz1,     PLCID_Scz2,      PalID_SCZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $21; 1;	 ; SKY CHASE ZONE ACT 2 (U)
+	levartptrs PLCID_Ghz1,     PLCID_Ghz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $22; 0; $11; GREEN HILL ZONE ACTS 1
+	levartptrs PLCID_Ghz1,     PLCID_Ghz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $23; 1;	 ; GREEN HILL ZONE ACTS 2
+	levartptrs PLCID_Ghz1,     PLCID_Ghz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $24; 0; $12; GREEN HILL ZONE ACT 3
+	levartptrs PLCID_Ghz1,     PLCID_Ghz2,      PalID_GHZ,  ArtKos_GHZ, BM16_GHZ, BM128_GHZ ; $25; 1;	 ; GREEN HILL ZONE ACT 4 (U)
 
-    if (cur_zone_id<>no_of_zones)&&(MOMPASS=1)
-	message "Warning: Table LevelArtPointers has \{cur_zone_id/1.0} entries, but it should have \{no_of_zones/1.0} entries"
+    if (cur_zone_id<>no_of_levels)&&(MOMPASS=1)
+	message "Warning: Table LevelArtPointers has \{cur_zone_id/1.0} entries, but it should have \{no_of_levels/1.0} entries"
     endif
 	!org LevelArtPointers+cur_zone_id*12
 

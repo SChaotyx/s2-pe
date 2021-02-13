@@ -289,36 +289,62 @@ green_hill_zone_2 zoneID		$12
 ; set the number of zones
 no_of_zones = cur_zone_id
 
-; Zone and act IDs
-emerald_hill_zone_act_1 =	(emerald_hill_zone<<8)|$00
-emerald_hill_zone_act_2 =	(emerald_hill_zone<<8)|$01
-chemical_plant_zone_act_1 =	(chemical_plant_zone<<8)|$00
-chemical_plant_zone_act_2 =	(chemical_plant_zone<<8)|$01
-aquatic_ruin_zone_act_1 =	(aquatic_ruin_zone<<8)|$00
-aquatic_ruin_zone_act_2 =	(aquatic_ruin_zone<<8)|$01
-casino_night_zone_act_1 =	(casino_night_zone<<8)|$00
-casino_night_zone_act_2 =	(casino_night_zone<<8)|$01
-hill_top_zone_act_1 =		(hill_top_zone<<8)|$00
-hill_top_zone_act_2 =		(hill_top_zone<<8)|$01
-mystic_cave_zone_act_1 =	(mystic_cave_zone<<8)|$00
-mystic_cave_zone_act_2 =	(mystic_cave_zone<<8)|$01
-oil_ocean_zone_act_1 =		(oil_ocean_zone<<8)|$00
-oil_ocean_zone_act_2 =		(oil_ocean_zone<<8)|$01
-metropolis_zone_act_1 =		(metropolis_zone<<8)|$00
-metropolis_zone_act_2 =		(metropolis_zone<<8)|$01
-metropolis_zone_act_3 =		(metropolis_zone_2<<8)|$00
-sky_chase_zone_act_1 =		(sky_chase_zone<<8)|$00
-wing_fortress_zone_act_1 =	(wing_fortress_zone<<8)|$00
-death_egg_zone_act_1 =		(death_egg_zone<<8)|$00
-; Prototype zone and act IDs
-wood_zone_act_1 =		(wood_zone<<8)|$00
-wood_zone_act_2 =		(wood_zone<<8)|$01
-hidden_palace_zone_act_1 =	(hidden_palace_zone<<8)|$00
-hidden_palace_zone_act_2 =	(hidden_palace_zone<<8)|$01
-; Sonic 1 zones
-green_hill_zone_act_1 = (green_hill_zone<<8)|$00
-green_hill_zone_act_2 = (green_hill_zone<<8)|$01
-green_hill_zone_act_3 = (green_hill_zone_2<<8)|$00
+; ---------------------------------------------------------------------------
+cur_level_str := "0" ; string representation of the above
+cur_level_id := 0 ; the level ID currently being declared
+
+; macro to declare a level ID
+; this macro also declares constants of the form level_id_X, where X is the ID of the level in stock Sonic 2
+; in order to allow level offset tables to be made dynamic
+levelID macro levelID,{INTLABEL}
+__LABEL__ = levelID
+level_id_{cur_level_str} = cur_level_id
+cur_level_id := cur_level_id+1
+cur_level_str := "\{cur_level_id}"
+    endm
+
+; Zone, act IDs and final levelIDs
+emerald_hill_zone_act_1 	levelID (emerald_hill_zone<<8)|$00		; 0
+emerald_hill_zone_act_2 	levelID (emerald_hill_zone<<8)|$01		; 1
+zone_1_act_1 				levelID (zone_1<<8)|$00					; 2
+zone_1_act_2 				levelID (zone_1<<8)|$01					; 3
+wood_zone_act_1 			levelID (wood_zone<<8)|$00				; 4
+wood_zone_act_2 			levelID (wood_zone<<8)|$01				; 5
+zone_3_act_1 				levelID (zone_3<<8)|$00					; 6
+zone_3_act_2 				levelID (zone_3<<8)|$01					; 7
+metropolis_zone_act_1 		levelID (metropolis_zone<<8)|$00		; 8
+metropolis_zone_act_2 		levelID (metropolis_zone<<8)|$01		; 9
+metropolis_zone_act_3 		levelID (metropolis_zone_2<<8)|$00		; $A
+metropolis_zone_act_4 		levelID (metropolis_zone_2<<8)|$01		; $B
+wing_fortress_zone_act_1 	levelID (wing_fortress_zone<<8)|$00		; $C
+wing_fortress_zone_act_2 	levelID (wing_fortress_zone<<8)|$01		; $D
+hill_top_zone_act_1 		levelID (hill_top_zone<<8)|$00			; $E
+hill_top_zone_act_2 		levelID (hill_top_zone<<8)|$01			; $F
+hidden_palace_zone_act_1 	levelID (hidden_palace_zone<<8)|$00		; $10
+hidden_palace_zone_act_2 	levelID (hidden_palace_zone<<8)|$01		; $11
+zone_9_act_1 				levelID (zone_9<<8)|$00					; $12
+zone_9_act_2 				levelID (zone_9<<8)|$01					; $13
+oil_ocean_zone_act_1 		levelID (oil_ocean_zone<<8)|$00			; $14
+oil_ocean_zone_act_2 		levelID (oil_ocean_zone<<8)|$01			; $15
+mystic_cave_zone_act_1 		levelID (mystic_cave_zone<<8)|$00		; $16
+mystic_cave_zone_act_2 		levelID (mystic_cave_zone<<8)|$01		; $17
+casino_night_zone_act_1 	levelID (casino_night_zone<<8)|$00		; $18
+casino_night_zone_act_2 	levelID (casino_night_zone<<8)|$01		; $19
+chemical_plant_zone_act_1 	levelID (chemical_plant_zone<<8)|$00	; $1A
+chemical_plant_zone_act_2 	levelID (chemical_plant_zone<<8)|$01	; $1B
+death_egg_zone_act_1 		levelID (death_egg_zone<<8)|$00			; $1C
+death_egg_zone_act_2		levelID (death_egg_zone<<8)|$01			; $1D
+aquatic_ruin_zone_act_1 	levelID (aquatic_ruin_zone<<8)|$00		; $1E
+aquatic_ruin_zone_act_2 	levelID (aquatic_ruin_zone<<8)|$01		; $1F
+sky_chase_zone_act_1 		levelID (sky_chase_zone<<8)|$00			; $20
+sky_chase_zone_act_2 		levelID (sky_chase_zone<<8)|$01			; $21
+green_hill_zone_act_1 		levelID (green_hill_zone<<8)|$00		; $22
+green_hill_zone_act_2 		levelID (green_hill_zone<<8)|$01		; $23
+green_hill_zone_act_3 		levelID (green_hill_zone_2<<8)|$00		; $24
+green_hill_zone_act_4 		levelID (green_hill_zone_2<<8)|$01		; $25
+
+; set the number of levels
+no_of_levels = cur_level_id
 
 ; ---------------------------------------------------------------------------
 ; some variables and functions to help define those constants (redefined before a new set of IDs)
